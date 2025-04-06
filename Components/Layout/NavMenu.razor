@@ -3,17 +3,11 @@
 @inject NavigationManager NavigationManager
 
 <div>
-    <ul class="row">
-        <li class="col"><a href="#">Home</a></li>
-        <li class="col"><a href="#education">Education</a></li>
-        <li class="col"><a href="#skills">Skills</a></li>
-        <li class="col"><a href="#experience">Experience</a></li>
-        <li class="col"><a href="#profiles">Profile</a></li>
-        <li class="col"><a href="#portfolio">Portfolio</a></li>
-        <li class="col"><a href="#clients">Clients</a></li>
-        <li class="col"><a href="#contact">Contact</a></li>
-    </ul><!--/.nav -->
-</div><!-- /.navbar-collapse -->
+    <ul class="row mb-1" style="padding-right: 50px;">
+        <li class="col md-5"><a href="#">Home</a></li>
+        <li class="col md-5"><a href="#about">About</a></li>
+    </ul>
+</div>
 @code {
     private string? currentUrl;
 
