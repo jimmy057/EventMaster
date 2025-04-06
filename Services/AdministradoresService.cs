@@ -12,10 +12,10 @@ public class AdministradoresService(IDbContextFactory<ApplicationDbContext> DbFa
 		await using var contexto = await DbFactory.CreateDbContextAsync();
 		return await contexto.Administradores.AnyAsync(c => c.AdminId == id);
 	}
-	private async Task<bool> Insertar(Clientes cliente)
+	private async Task<bool> Insertar(Administradores admin)
 	{
 		await using var contexto = await DbFactory.CreateDbContextAsync();
-		contexto.Clientes.Add(cliente);
+		contexto.Administradores.Add(admin);
 		return await contexto.SaveChangesAsync() > 0;
 	}
 	private async Task<bool> Modificar(Administradores admin)
