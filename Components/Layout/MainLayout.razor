@@ -3,8 +3,53 @@
 <div class="page">
 
     <main>
-        <div class="top-row pt-xxl-3">
-            <NavMenu />
+        <div class="top-row d-flex justify-content-between">
+            <div class="pt-3 text-start">
+                <a href="/">
+                    <h1 class="header-text"  style="color: #bf1ff0;">EventMaster</h1>
+                </a>
+            </div>
+
+            <AuthorizeView Roles="admin">
+                <Authorized>
+                    <div class="d-flex justify-content-end">
+                        <a style="color: #bf1ff0;" href="/Administradores/Index">Administradores</a>
+                        <a style="color: #bf1ff0;" href="/Clientes/Index">Clientes</a>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+
+            <AuthorizeView>
+                <Authorized>
+                    <div class="d-flex justify-content-end" style="padding-right: 50px">
+
+                        <span>¡Hola, @NombreUsuarioAutenticado!</span>
+                        <div class="dropdown">
+                            <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Opciones</a>
+                            <div class="dropdown-menu">
+                                <a href="/Account/Manage" class="dropdown-item">Mi Cuenta</a>
+                                <form action="Account/Logout" method="post">
+                                    <AntiforgeryToken />
+                                    <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                                    <button style="color: #bf1ff0;"  type="submit" class="dropdown-item">Cerrar Sesi&oacute;n</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    <div class="pt-3"style="padding-right: 50px">
+                        <div class="row">
+                            <div class="col">
+                                <a style="color: #bf1ff0;" href="/Account/Login">Iniciar Sesión</a>
+                            </div>
+                            <div class="col">
+                                <a style="color: #bf1ff0;" href="/Account/Register">Registrarse</a>
+                            </div>
+                        </div>
+                    </div>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
 
         <article class="content px-4">
@@ -18,3 +63,28 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    private string? currentUrl;
+    public string? NombreUsuarioAutenticado { get; set; }
+    [Inject]
+    NavigationManager NavigationManager { get; set; } = null!;
+
+    [Inject]
+    AuthenticationStateProvider AuthStateProvider { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var userAutenticado = authState.User;
+        NombreUsuarioAutenticado = userAutenticado.Identity.Name;
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+}
