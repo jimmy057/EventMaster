@@ -6,7 +6,7 @@
         <div class="top-row d-flex justify-content-between">
             <div class="pt-3 text-start">
                 <a href="/">
-                    <h1 class="header-text"  style="color: #bf1ff0;">EventMaster</h1>
+                    <h1 class="header-text" style="color: #bf1ff0;">EventMaster</h1>
                 </a>
             </div>
 
@@ -23,22 +23,19 @@
                 <Authorized>
                     <div class="d-flex justify-content-end" style="padding-right: 50px">
 
-                        <span>¡Hola, @NombreUsuarioAutenticado!</span>
-                        <div class="dropdown">
-                            <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Opciones</a>
-                            <div class="dropdown-menu">
-                                <a href="/Account/Manage" class="dropdown-item">Mi Cuenta</a>
-                                <form action="Account/Logout" method="post">
-                                    <AntiforgeryToken />
-                                    <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                                    <button style="color: #bf1ff0;"  type="submit" class="dropdown-item">Cerrar Sesi&oacute;n</button>
-                                </form>
-                            </div>
-                        </div>
+                        <span>Bienvenido, @NombreUsuarioAutenticado!</span>
+                        <a href="/Account/Manage">Mi Cuenta</a>
+                        <span>
+                            <form action="Account/Logout" method="post">
+                                <AntiforgeryToken />
+                                <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                                <button style="color: #bf1ff0;" type="submit" class="dropdown-item">Cerrar Sesi&oacute;n</button>
+                            </form>
+                        </span>
                     </div>
                 </Authorized>
                 <NotAuthorized>
-                    <div class="pt-3"style="padding-right: 50px">
+                    <div class="pt-3" style="padding-right: 50px">
                         <div class="row">
                             <div class="col">
                                 <a style="color: #bf1ff0;" href="/Account/Login">Iniciar Sesión</a>
