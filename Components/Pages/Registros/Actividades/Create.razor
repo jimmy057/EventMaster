@@ -1,0 +1,156 @@
+﻿@page "/Actividades/Create/{ClienteID:int}/{UserID}"
+
+@rendermode InteractiveServer
+@inject ActividadesService actividadesService
+@inject ClientesService clientesService
+@inject NavigationManager navigation
+
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using EventMaster.Components.Account
+@using EventMaster.Components.Account.Pages
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using EventMaster.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject ILogger<Register> Logger
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject RoleManager<IdentityRole> RoleManager
+
+@attribute [Authorize(Roles = "admin, cliente")]
+
+<PageTitle>Create</PageTitle>
+<div class="container" style="max-width: 900px;">
+    <div class="row mb-3">
+        <div class="col md-5">
+            <div>
+                <h3>Registro de <strong>Actividades</strong></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h3 class="text-center"><strong>Create</strong></h3>
+        </div>
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(MensajeError))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @MensajeError
+                </div>
+            }
+
+            <div class="container">
+
+                <EditForm Model="Input" OnValidSubmit="Guardar" FormName="CreateActividades">
+                    <DataAnnotationsValidator />
+
+                    <div class="row mb-3">
+                        <div class="col col-md-8">
+                            <label><strong>Título</strong></label>
+                            <InputText required class="form-control" @bind-Value="Input.Titulo" placeholder="Título" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col col-md-8">
+                            <label><strong>Tipo de Actividad</strong></label>
+                            <InputText required class="form-control" @bind-Value="Input.Tipo" placeholder="Tipo de Actividad" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col col-md-8">
+                            <label><strong>Descripción</strong></label>
+                            <InputText required class="form-control" @bind-Value="Input.Descripcion" placeholder="Descripción" />
+                        </div>
+                    </div>
+
+                    <div style="width: 817px">
+                        <div class="row mb-3">
+                            <button @onclick="NavegarA" type="button" class="btn btn-secondary bi bi-arrow-left-circle">Volver</button>
+                        </div>
+                        <div class="row mb-3">
+                            <button type="submit" class="btn custom-button bi bi-floppy">Guardar</button>
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-button {
+    background-color: #bf1ff0;
+    color: white;
+    }
+
+    .custom-button:hover {
+    background-color: #9e1ac7; /* versión más oscura */
+    }
+</style>
+
+@code {
+    private IEnumerable<IdentityError>? identityErrors;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    public string MensajeError { get; set; } = string.Empty;
+    public Actividades Actividad { get; set; } = new();
+    public Clientes Cliente { get; set; } = new();
+    public ApplicationUser User { get; set; }
+
+    [Parameter]
+    public int ClienteID { get; set; }
+    [Parameter]
+    public string UserID { get; set; }
+
+    void NavegarA() { NavigationManager.NavigateTo($"/Actividades/Index/{ClienteID}/{UserID}"); }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cliente = await clientesService.Buscar(ClienteID);
+        User = await UserManager.FindByIdAsync(Cliente.UsuarioId);
+    }
+
+    public async Task Guardar()
+    {
+        if (string.IsNullOrEmpty(Input.Titulo) || string.IsNullOrEmpty(Input.Descripcion) || string.IsNullOrEmpty(Input.Tipo))
+        {
+            MensajeError = "Complete los campos requeridos";
+            return;
+        }
+
+        Actividad.TituloActividad = Input.Titulo;
+        Actividad.TipoActividad = Input.Tipo;
+        Actividad.Descripcion = Input.Descripcion;
+        Actividad.IdCliente = ClienteID;
+
+        await actividadesService.Guardar(Actividad);
+        NavigationManager.NavigateTo($"/Actividades/Index/{ClienteID}/{UserID}");
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [Display(Name = "Titulo")]
+        public string Titulo { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Tipo")]
+        public string Tipo { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Descripcion")]
+        public string Descripcion { get; set; } = "";
+    }
+}
