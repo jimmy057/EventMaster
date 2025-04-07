@@ -1,0 +1,256 @@
+﻿@page "/Eventos/Create/{ClienteID:int}/{UserID}"
+
+@rendermode InteractiveServer
+@inject ActividadesService actividadesService
+@inject ClientesService clientesService
+@inject NavigationManager navigation
+
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using EventMaster.Components.Account
+@using EventMaster.Components.Account.Pages
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using EventMaster.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject ILogger<Register> Logger
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject RoleManager<IdentityRole> RoleManager
+
+@attribute [Authorize(Roles = "admin, cliente")]
+
+<PageTitle>Create</PageTitle>
+<div class="container" style="max-width: 900px;">
+    <div class="row mb-3">
+        <div class="col md-5">
+            <div>
+                <h3>Registro de <strong>Eventos</strong></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h3 class="text-center"><strong>Create</strong></h3>
+        </div>
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(MensajeError))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @MensajeError
+                </div>
+            }
+
+            <div class="container">
+
+                <EditForm Model="Input" OnValidSubmit="Guardar" FormName="CreateEventos">
+                    <DataAnnotationsValidator />
+
+                    <div class="row mb-3">
+                        <div class="col col-md-8">
+                            <label><strong>Título</strong></label>
+                            <InputText required class="form-control" @bind-Value="Input.Titulo" placeholder="Título" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col col-md-8">
+                            <label><strong>Descripción</strong></label>
+                            <InputTextArea required class="form-control" @bind-Value="Input.Direccion" placeholder="Descripción" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col col-md-8">
+                            <label><strong>Descripción</strong></label>
+                            <InputNumber required class="form-control" @bind-Value="Input.PrecioEntradaEvento" />
+                        </div>
+                    </div>
+
+                    <div style="width: 817px">
+                        <div class="row mb-3">
+                            <button @onclick="NavegarA" type="button" class="btn btn-secondary bi bi-arrow-left-circle">Volver</button>
+                        </div>
+                        <div class="row mb-3">
+                            <button type="submit" class="btn custom-button bi bi-floppy">Guardar</button>
+                        </div>
+                    </div>
+
+                    <div class="container mb-3">
+                        <div class="border border-success p-3 mt-3">
+                            <div>
+                                <h3 class="text-center"><strong>Detalle del evento</strong></h3>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label><strong>Dirección</strong></label>
+                                    <InputText required class="form-select" @bind-Value="Evento.Direccion" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label><strong>Precio Entrada Evento</strong></label>
+                                    <InputNumber required class="form-control" @bind-Value="Evento.PrecioEntradaEvento" />
+                                </div>
+                                <div class="col d-flex justify-content-center">
+                                    <label><strong></strong></label>
+                                    <button type="button" @* @onclick="Agregar"*@  class="btn btn-outline-success">Agregar</button>
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(MensajeErrorDetalle))
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    @MensajeErrorDetalle
+                                </div>
+                            }
+                            <table class="table table-sm table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Título</th>
+                                        <th>Dirección</th>
+                                        <th>Hora Inicio</th>
+                                        <th>Hora Fin</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var detalle in Evento.ListaDetalle)
+                                    {
+                                        <tr>
+                                            <td>@detalle.DetalleId</td>
+                                            <td>@detalle.Actividad.TipoActividad</td>
+                                            <td>@detalle.Actividad.Participantes.ToString("N2")</td>
+                                            <td>@detalle.HoraInicio</td>
+                                            <td>@detalle.HoraFin</td>
+                                            <td>@detalle.Precio.ToString("N2")</td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-outline-danger bi bi-trash3" @*@onclick="(() => RemoverDetalle(detalle))"*@>Remover</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Total</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>RD$@Evento.PrecioEntradaEvento.ToString("N2")</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-button {
+        background-color: #bf1ff0;
+        color: white;
+    }
+
+        .custom-button:hover {
+            background-color: #9e1ac7; /* versión más oscura */
+        }
+</style>
+
+@code {
+    private IEnumerable<IdentityError>? identityErrors;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    public string? MensajeError { get; set; } = string.Empty;
+    public string? MensajeErrorDetalle { get; set; } = string.Empty;
+    public Eventos Evento { get; set; } = new();
+    public Clientes Cliente { get; set; } = new();
+    public ApplicationUser User { get; set; }
+
+    [Parameter]
+    public int ClienteID { get; set; }
+    [Parameter]
+    public string UserID { get; set; }
+
+    void NavegarA() { NavigationManager.NavigateTo($"/Eventos/Index/{ClienteID}/{UserID}"); }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cliente = await clientesService.Buscar(ClienteID);
+        User = await UserManager.FindByIdAsync(Cliente.UsuarioId);
+    }
+
+    public async Task Guardar()
+    {
+        if (string.IsNullOrEmpty(Input.Titulo) || Input.HoraFin == default || Input.HoraInicio == default || Input.Direccion == null)
+        {
+            MensajeError = "Complete los campos requeridos";
+            return;
+        }
+
+        // Evento.TituloEvento = Input.Titulo;
+        // Evento = Input.;
+        // Evento.Descripcion = Input.Descripcion;
+        // Evento.Participantes = Input.Participantes;
+        // Evento.IdCliente = ClienteID;
+
+        // await actividadesService.Guardar(Evento);
+        NavigationManager.NavigateTo($"/Actividades/Index/{ClienteID}/{UserID}");
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [Display(Name = "Titulo")]
+        public string Titulo { get; set; } = "";
+
+        [Required]
+        [Display(Name = "NombreCliente")]
+        public string NombreCliente { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Direccion")]
+        public string Direccion { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Precio")]
+        public string PrecioEntradaEvento { get; set; } = "";
+
+        [Required]
+        [Display(Name = "FechaInicio")]
+        public DateTime FechaInicio { get; set; }
+
+        [Required]
+        [Display(Name = "HoraInicio")]
+        public TimeOnly HoraInicio { get; set; }
+        
+        [Required]
+        [Display(Name = "HoraFin")]
+        public TimeOnly HoraFin{ get; set; }
+    }
+}

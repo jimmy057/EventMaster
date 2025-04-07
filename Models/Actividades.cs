@@ -10,5 +10,6 @@ public class Actividades
 	public string TipoActividad { get; set; }
 	public string Descripcion { get; set; }
 	public int Participantes { get; set; }
+	public double Precio { get; set; }
 	public int IdCliente { get; set; }
 }

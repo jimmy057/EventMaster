@@ -25,3 +25,31 @@ public class Eventos
 		}
 	}
 }
+
+
+private sealed class InputModel
+{
+	[Required]
+	[Display(Name = "NombreCliente")]
+	public string NombreCliente { get; set; } = "";
+
+	[Required]
+	[Display(Name = "Direccion")]
+	public string Direccion { get; set; } = "";
+
+	[Required]
+	[Display(Name = "Precio")]
+	public string PrecioEntradaEvento { get; set; } = "";
+
+	[Required]
+	[Display(Name = "FechaInicio")]
+	public DateTime FechaInicio { get; set; }
+
+	[Required]
+	[Display(Name = "HoraInicio")]
+	public TimeOnly HoraInicio { get; set; }
+
+	[Required]
+	[Display(Name = "HoraFin")]
+	public TimeOnly HoraFin { get; set; }
+}

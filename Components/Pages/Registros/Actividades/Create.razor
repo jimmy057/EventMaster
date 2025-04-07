@@ -71,6 +71,10 @@
                             <label><strong>Participantes</strong></label>
                             <InputNumber required class="form-control" @bind-Value="Input.Participantes"/>
                         </div>
+                        <div class="col col-md-8">
+                            <label><strong>Precio</strong></label>
+                            <InputNumber required class="form-control" @bind-Value="Input.Precio" />
+                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -131,7 +135,8 @@
 
     public async Task Guardar()
     {
-        if (string.IsNullOrEmpty(Input.Titulo) || string.IsNullOrEmpty(Input.Descripcion) || string.IsNullOrEmpty(Input.Tipo) || Input.Participantes <= 0)
+        MensajeError = string.Empty;
+        if (string.IsNullOrEmpty(Input.Titulo) || string.IsNullOrEmpty(Input.Descripcion) || string.IsNullOrEmpty(Input.Tipo) || Input.Participantes <= 0 || Input.Precio <= 0)
         {
             MensajeError = "Complete los campos requeridos";
             return;
@@ -142,6 +147,7 @@
         Actividad.Descripcion = Input.Descripcion;
         Actividad.Participantes = Input.Participantes;
         Actividad.IdCliente = ClienteID;
+        Actividad.Precio = Input.Precio;
 
         await actividadesService.Guardar(Actividad);
         NavigationManager.NavigateTo($"/Actividades/Index/{ClienteID}/{UserID}");
@@ -164,5 +170,9 @@
         [Required]
         [Display(Name = "Participantes")]
         public int Participantes { get; set; }
+
+        [Required]
+        [Display(Name = "Precio")]
+        public double Precio { get; set; }
     }
 }

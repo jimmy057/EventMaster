@@ -1,11 +1,12 @@
-﻿@page "/Actividades/Index/{ClienteID:int}/{UserID}"
+﻿@page "/Eventos/Index/{ClienteID:int}/{UserID}"
 
 @rendermode InteractiveServer
 
 @inject NavigationManager NavigationManager
-@inject ActividadesService actividadesService
 @inject UserManager<ApplicationUser> UserManager
 @inject ClientesService clientesService
+@inject EventosService eventosService
+@inject ActividadesService actividadesService
 @inject AuthenticationStateProvider AuthStateProvider
 
 @attribute [Authorize(Roles = "admin, cliente")]
@@ -16,7 +17,7 @@
     <div class="row mb-3">
         <div class="col md-5">
             <div>
-                <h3>Registro de <strong>Actividades</strong></h3>
+                <h3>Registro de <strong>Eventos</strong></h3>
             </div>
         </div>
         <div class="col md-5 text-end">
@@ -41,9 +42,16 @@
             <div class="input-group">
                 <InputSelect class="form-select-lg" @bind-Value="@Filtro.valorEnFiltro">
                     <option value="" selected disabled>--- Selecciona ---</option>
-                    <option value="idactividad">ID</option>
+                    <option value="idevento">ID</option>
                     <option value="titulo">Título</option>
-                    <option value="tipo">Tipo de Actividad</option>
+                    <AuthorizeView Roles="admin">
+                        <Authorized>
+                            <option value="cliente">Clliente</option>
+                        </Authorized>
+                    </AuthorizeView>
+                    <option value="direccion">Dirección</option>
+                    <option value="fecha">Fecha</option>
+                    <option value="estado">Estado</option>
                 </InputSelect>
                 @*btn restablecer*@
                 <button type="button" class="btn btn-sm btn-secondary bi bi-arrow-counterclockwise" @onclick="() => Restablecer()">Restablecer</button>
@@ -77,28 +85,42 @@
                     <tr>
                         <th>ID</th>
                         <th>Título</th>
-                        <th>Tipo de Actividad</th>
-                        <th>Descripción</th>
+                        <AuthorizeView Roles="admin">
+                            <Authorized>
+                                <th>Cliente</th>
+                            </Authorized>
+                        </AuthorizeView>
+                        <th>Dirección</th>
+                        @* <th>Cupos</th> *@
+                        <th>Fecha</th>
+                        <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var actividad in ListaActividades)
+                    @foreach (var evento in ListaEventos)
                     {
-                        if (actividad.IdCliente == ClienteID || userAutenticado.IsInRole("admin"))
+                        if (evento.ClienteId == ClienteID || userAutenticado.IsInRole("admin"))
                         {
                             <tr>
-                                <td>@actividad.ActividadId</td>
-                                <td>@actividad.TituloActividad</td>
-                                <td>@actividad.TipoActividad</td>
-                                <td>@actividad.Descripcion</td>
+                                <td>@evento.EventoId</td>
+                                <td>@evento.TituloEvento</td>
+                                <AuthorizeView>
+                                    <Authorized>
+                                        <td>@Cliente.Nombre + @Cliente.Apellido</td>
+                                    </Authorized>
+                                </AuthorizeView>
+                                <td>@evento.Direccion</td>
+                                @* <td>@evento.Cupos</td> *@
+                                <td>@evento.FechaInicio</td>
+                                <td>@evento.EstadoEvento</td>
                                 <td>
                                     <div class="dropdown">
                                         <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Acción</a>
                                         <div class="dropdown-menu">
-                                            <a href="/Actividades/View/@ClienteID/@UserID/@actividad.ActividadId" class="dropdown-item">Ver</a>
-                                            <a href="/Actividades/Edit/@ClienteID/@UserID/@actividad.ActividadId" class="dropdown-item">Editar</a>
-                                            <a href="/Actividades/Delete/@ClienteID/@UserID/@actividad.ActividadId" class="dropdown-item">Eliminar</a>
+                                            <a href="/Eventos/View/@ClienteID/@UserID/@evento.EventoId" class="dropdown-item">Ver</a>
+                                            <a href="/Eventos/Edit/@ClienteID/@UserID/@evento.EventoId" class="dropdown-item">Editar</a>
+                                            <a href="/Eventos/Delete/@ClienteID/@UserID/@evento.EventoId" class="dropdown-item">Eliminar</a>
                                         </div>
                                     </div>
                                 </td>
@@ -106,7 +128,7 @@
                         }
                     }
                 </tbody>
-                <caption>Cant de actividades: @CantActividades</caption>
+                <caption>Cant de Eventos: @CantEventos</caption>
             </table>
         </div>
     </div>
@@ -132,11 +154,11 @@
     public Filtro Filtro { get; set; } = new();
     public ApplicationUser User { get; set; } = new();
     public Clientes Cliente { get; set; } = new();
-    public List<Actividades> ListaActividades { get; set; } = new();
+    public List<Eventos> ListaEventos { get; set; } = new();
     ClaimsPrincipal userAutenticado { get; set; } = new();
 
-    public int CantActividades => ListaActividades
-    .Count(actividad => actividad.IdCliente == ClienteID || userAutenticado.IsInRole("admin"));
+    public int CantEventos => ListaEventos
+    .Count(a => a.ClienteId == ClienteID || userAutenticado.IsInRole("admin"));
 
     protected override async Task OnInitializedAsync()
     {
@@ -144,7 +166,7 @@
         userAutenticado = authState.User;
         Cliente = await clientesService.Buscar(ClienteID);
         User = await UserManager.FindByIdAsync(UserID);
-        ListaActividades = await actividadesService.Listar(x => true);
+        ListaEventos = await eventosService.Listar(x => true);
     }
 
     void NavegarA() { NavigationManager.NavigateTo($"/Actividades/Create/{ClienteID}/{UserID}"); }
@@ -163,7 +185,7 @@
 
         switch (Filtro.valorEnFiltro)
         {
-            case "idactividad":
+            case "idevento":
                 if (string.IsNullOrEmpty(Filtro.CriterioBusqueda))
                 {
                     Filtro.MensajeError = "Debe escribir un ID valido";
@@ -174,7 +196,7 @@
                     Filtro.MensajeError = "Debe escribir un ID valido";
                     return;
                 }
-                ListaActividades = await actividadesService.Listar(lt => lt.ActividadId.ToString().Contains(Filtro.CriterioBusqueda));
+                ListaEventos = await eventosService.Listar(lt => lt.EventoId.ToString().Contains(Filtro.CriterioBusqueda));
                 break;
 
             case "titulo":
@@ -188,22 +210,36 @@
                     Filtro.MensajeError = "Debe escribir un titulo de actividad valido";
                     return;
                 }
-                ListaActividades = await actividadesService.Listar(lt => lt.TituloActividad.Trim().ToLower()
+                ListaEventos = await eventosService.Listar(lt => lt.TituloEvento.Trim().ToLower()
                                                             .Contains(Filtro.CriterioBusqueda));
                 break;
 
-            case "tipo":
+            case "fecha":
+                if (Filtro.Desde == null || Filtro.Hasta == null)
+                {
+                    Filtro.MensajeError = "Ambos campos de fecha deben contener valores";
+                    return;
+                }
+                if (Filtro.Desde > Filtro.Hasta)
+                {
+                    Filtro.MensajeError = "La fecha inicial no puede ser mayor a la final";
+                    return;
+                }
+                ListaEventos = await eventosService.Listar(lt => lt.FechaInicio >= Filtro.Desde && lt.FechaInicio <= Filtro.Hasta);
+                break;
+
+            case "estado":
                 if (string.IsNullOrEmpty(Filtro.CriterioBusqueda))
                 {
-                    Filtro.MensajeError = "Debe escribir un tipo de actividad valido";
+                    Filtro.MensajeError = "Debe escribir un titulo de actividad valido";
                     return;
                 }
                 if (Filtro.CriterioBusqueda.Any(char.IsDigit))
                 {
-                    Filtro.MensajeError = "Debe escribir un tipo de actividad valido";
+                    Filtro.MensajeError = "Debe escribir un titulo de actividad valido";
                     return;
                 }
-                ListaActividades = await actividadesService.Listar(lt => lt.TipoActividad.Trim().ToLower()
+                ListaEventos = await eventosService.Listar(lt => lt.TituloEvento.Trim().ToLower()
                                                             .Contains(Filtro.CriterioBusqueda));
                 break;
         }
@@ -216,6 +252,6 @@
         Filtro.MensajeError = string.Empty;
         Filtro.Desde = null;
         Filtro.Hasta = null;
-        ListaActividades = await actividadesService.Listar(x => true);
+        ListaEventos = await eventosService.Listar(x => true);
     }
 }

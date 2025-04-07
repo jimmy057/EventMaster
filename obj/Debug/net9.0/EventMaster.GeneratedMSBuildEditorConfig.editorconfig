@@ -256,6 +256,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQ2xpZW50ZXNQYWdlc1xWaWV3LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/EventosPages/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcRXZlbnRvc1BhZ2VzXENyZWF0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/EventosPages/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcRXZlbnRvc1BhZ2VzXEluZGV4LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
