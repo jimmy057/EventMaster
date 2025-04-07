@@ -3,9 +3,9 @@ using EventMaster.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace MegatoursRD.Services;
+namespace EventMaster.Services;
 
-public class ClientesServices(IDbContextFactory<ApplicationDbContext> DbFactory)
+public class ClientesService(IDbContextFactory<ApplicationDbContext> DbFactory)
 {
 	public async Task<bool> Existe(int id)
 	{

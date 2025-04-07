@@ -3,7 +3,7 @@ using EventMaster.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace MegatoursRD.Services;
+namespace EventMaster.Services;
 
 public class ActividadesService(IDbContextFactory<ApplicationDbContext> DbFactory)
 {
