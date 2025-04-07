@@ -50,6 +50,17 @@ public class ActividadesService(IDbContextFactory<ApplicationDbContext> DbFactor
 			.ToListAsync();
 	}
 
+	public async Task<bool> ExisteTipo(string tipo)
+	{
+		await using var contexto = await DbFactory.CreateDbContextAsync();
+		return await contexto.Actividades.AnyAsync(c => c.TipoActividad.Trim().ToLower() == tipo.Trim().ToLower());
+	}
+	public async Task<bool> ExisteTitulo(string titulo)
+	{
+		await using var contexto = await DbFactory.CreateDbContextAsync();
+		return await contexto.Actividades.AnyAsync(c => c.TituloActividad.Trim().ToLower() == titulo.Trim().ToLower());
+	}
+
 	public async Task<Actividades?> Buscar(int id)
 	{
 		await using var contexto = await DbFactory.CreateDbContextAsync();
