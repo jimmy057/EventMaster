@@ -11,6 +11,6 @@ public class Administradores
 	public string UsuarioId { get; set; }
 	[ForeignKey("UsuarioId")]
 	public ApplicationUser Usuario { get; set; }
-	public int NombreUsuario { get; set; }
+	public string NombreUsuario { get; set; }
 	public DateTime FechaCreacion { get; set; }
 }
