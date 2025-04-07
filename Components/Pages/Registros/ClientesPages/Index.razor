@@ -1,0 +1,218 @@
+﻿@page "/Clientes/Index"
+
+@rendermode InteractiveServer
+
+@inject NavigationManager NavigationManager
+@inject ClientesService clientesService
+
+@attribute [Authorize(Roles = "admin")]
+
+<PageTitle>Index</PageTitle>
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col md-5">
+            <div>
+                <h3>Registro de <strong>Clientes</strong></h3>
+            </div>
+        </div>
+        <div class="col md-5 text-end">
+            <div>
+                <button @onclick="NavegarA" class="btn custom-button">Agregar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-4">
+            <label><strong>Filtrar</strong></label>
+            <div class="input-group">
+                <InputSelect class="form-select-lg" @bind-Value="@Filtro.valorEnFiltro">
+                    <option value="" selected disabled>--- Selecciona ---</option>
+                    <option value="idcliente">ID Cliente</option>
+                    <option value="idusuario">ID Usuario</option>
+                    <option value="nombres">Nombre</option>
+                    <option value="apellido">Apellido</option>
+                    <option value="email">Email</option>
+                </InputSelect>
+                @*btn restablecer*@
+                <button type="button" class="btn btn-sm btn-secondary bi bi-arrow-counterclockwise" @onclick="() => Restablecer()">Restablecer</button>
+            </div>
+        </div>
+
+        @*Btn Buscar*@
+        <div class="col">
+            <div class="input-group" style="width: 500px">
+                @*textbox buscar*@
+                <label>Buscar</label>
+                <div class="input-group mb-3">
+                    <InputText style="width: 400px" @bind-Value="@Filtro.CriterioBusqueda" class="form-control" placeholder="Buscar" />
+                    <button class="btn custom-button" type="button" @onclick="Buscar">Buscar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Filtro.MensajeError))
+    {
+        <div class="alert alert-danger" role="alert">
+            @Filtro.MensajeError
+        </div>
+    }
+
+    <div class="card shadow-lg">
+        <div class="card-body">
+
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ID Usuario</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cliente in ListaClientes)
+                    {
+                        <tr>
+                            <td>@cliente.ClienteId</td>
+                            <td>@cliente.UsuarioId</td>
+                            <td>@cliente.Nombre</td>
+                            <td>@cliente.Apellido</td>
+                            <td>@cliente.Usuario.Email</td>
+                            <td>@cliente.Usuario.PhoneNumber</td>
+                            <td>
+                                <div class="dropdown">
+                                    <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Acción</a>
+                                    <div class="dropdown-menu">
+                                        <a href="/Clientes/View/@cliente.ClienteId/@cliente.UsuarioId" class="dropdown-item">Ver</a>
+                                        <a href="/Clientes/Edit/@cliente.ClienteId/@cliente.UsuarioId" class="dropdown-item">Editar</a>
+                                        <a href="/Clientes/Delete/@cliente.ClienteId/@cliente.UsuarioId" class="dropdown-item">Eliminar</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <caption>Cant de clientes: @ListaClientes.Count</caption>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-button {
+    background-color: #bf1ff0;
+    color: white;
+    }
+
+    .custom-button:hover {
+    background-color: #9e1ac7; /* versión más oscura */
+    }
+</style>
+
+
+
+@code {
+    public Filtro Filtro { get; set; } = new();
+    public List<Clientes> ListaClientes { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaClientes = await clientesService.Listar(x => true);
+    }
+
+    void NavegarA() { NavigationManager.NavigateTo("/Clientes/Create"); }
+
+    public async Task Buscar()
+    {
+        Filtro.MensajeError = "";
+        if (string.IsNullOrEmpty(Filtro.valorEnFiltro))
+        {
+            Filtro.MensajeError = "Debe seleccionar una opcion en el filtro";
+            return;
+        }
+
+        Filtro.CriterioBusqueda.Trim().TrimEnd().ToLower();
+
+        switch (Filtro.valorEnFiltro)
+        {
+            case "idcliente":
+                if (string.IsNullOrEmpty(Filtro.CriterioBusqueda))
+                {
+                    Filtro.MensajeError = "Debe escribir un ID valido";
+                    return;
+                }
+                if (!Filtro.CriterioBusqueda.All(char.IsDigit))
+                {
+                    Filtro.MensajeError = "Debe escribir un ID valido";
+                    return;
+                }
+                ListaClientes = await clientesService.Listar(lt => lt.ClienteId.ToString().Contains(Filtro.CriterioBusqueda));
+                break;
+
+            case "idusuario":
+                if (string.IsNullOrEmpty(Filtro.CriterioBusqueda))
+                {
+                    Filtro.MensajeError = "Debe escribir un ID valido";
+                    return;
+                }
+                ListaClientes = await clientesService.Listar(lt => lt.UsuarioId.Contains(Filtro.CriterioBusqueda));
+                break;
+
+            case "email":
+                if (string.IsNullOrEmpty(Filtro.CriterioBusqueda))
+                {
+                    Filtro.MensajeError = "Debe escribir un Email valido";
+                    return;
+                }
+                ListaClientes = await clientesService.Listar(lt => lt.Usuario.Email.Trim().ToLower()
+                                                            .Contains(Filtro.CriterioBusqueda));
+                break;
+
+            case "nombres":
+                if (string.IsNullOrEmpty(Filtro.CriterioBusqueda))
+                {
+                    Filtro.MensajeError = "Debe escribir un Nombre valido";
+                    return;
+                }
+                if (Filtro.CriterioBusqueda.Any(char.IsDigit))
+                {
+                    Filtro.MensajeError = "Debe escribir un Nombre valido";
+                    return;
+                }
+                ListaClientes = await clientesService.Listar(lt => lt.Nombre.Trim().ToLower()
+                                                            .Contains(Filtro.CriterioBusqueda));
+                break;
+
+            case "apellido":
+                if (string.IsNullOrEmpty(Filtro.CriterioBusqueda))
+                {
+                    Filtro.MensajeError = "Debe escribir un Nombre valido";
+                    return;
+                }
+                if (Filtro.CriterioBusqueda.Any(char.IsDigit))
+                {
+                    Filtro.MensajeError = "Debe escribir un Nombre valido";
+                    return;
+                }
+                ListaClientes = await clientesService.Listar(lt => lt.Apellido.Trim().ToLower()
+                                                            .Contains(Filtro.CriterioBusqueda));
+                break;
+        }
+    }
+
+    public async Task Restablecer()
+    {
+        Filtro.CriterioBusqueda = string.Empty;
+        Filtro.valorEnFiltro = string.Empty;
+        Filtro.MensajeError = string.Empty;
+        Filtro.Desde = null;
+        Filtro.Hasta = null;
+        ListaClientes = await clientesService.Listar(x => true);
+    }
+}

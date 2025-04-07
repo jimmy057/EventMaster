@@ -1,0 +1,150 @@
+﻿@page "/Clientes/Delete/{ClienteID:int}/{UserID}"
+
+@rendermode InteractiveServer
+@inject ClientesService clientesService
+@inject NavigationManager navigation
+
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using EventMaster.Components.Account
+@using EventMaster.Components.Account.Pages
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using EventMaster.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject ILogger<Register> Logger
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject RoleManager<IdentityRole> RoleManager
+
+@attribute [Authorize(Roles = "admin")]
+
+<PageTitle>Delete</PageTitle>
+<div class="container" style="max-width: 900px;">
+    <div class="row mb-3">
+        <div class="col md-5">
+            <div>
+                <h3>Registro de <strong>Clientes</strong></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h3 class="text-center"><strong>Eliminar</strong></h3>
+        </div>
+        <div class="card-body">
+            <div class="container">
+                <EditForm Model="Input" OnValidSubmit="Guardar">
+                    <DataAnnotationsValidator />
+
+                    <div class="row mb-3">
+                        <div class="col col-md-4">
+                            <label><strong>Nombres</strong></label>
+                            <InputText required disabled class="form-control" @bind-Value="Cliente.Nombre" placeholder="Nombres" />
+                        </div>
+
+                        <div class="col col-md-4">
+                            <label><strong>Apellidos</strong></label>
+                            <InputText required disabled class="form-control" @bind-Value="Cliente.Apellido" placeholder="Apellidos" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col col-md-4">
+                            <label><strong>Email</strong></label>
+                            <InputText type="email" disabled required class="form-control" @bind-Value="Input.Email" placeholder="Email" />
+                        </div>
+                        <div class="col col-md-4">
+                            <label><strong>Teléfono (opcional)</strong></label>
+                            <InputText required disabled class="form-control" @bind-Value="Input.PhoneNumber" placeholder="Teléfono" />
+                        </div>
+                    </div>
+
+                    <div style="width: 817px">
+                        <div class="row mb-3">
+                            <button @onclick="NavegarA" type="button" class="btn btn-secondary bi bi-arrow-left-circle">Volver</button>
+                        </div>
+                        <div class="row mb-3">
+                            <button @onclick="Guardar" class="btn btn-danger bi bi-floppy">Eliminar</button>
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-button {
+    background-color: #bf1ff0;
+    color: white;
+    }
+
+    .custom-button:hover {
+    background-color: #9e1ac7; /* versión más oscura */
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string UserID { get; set; }
+    [Parameter]
+    public int ClienteID { get; set; }
+
+    private IEnumerable<IdentityError>? identityErrors;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    public Clientes Cliente { get; set; } = new();
+    public ApplicationUser User { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cliente = await clientesService.Buscar(ClienteID);
+        User = await UserManager.FindByIdAsync(UserID);
+        Input.Email = User.Email;
+        Input.PhoneNumber = User.PhoneNumber;
+    }
+
+    void NavegarA() { NavigationManager.NavigateTo("/Clientes/Index"); }
+
+    public async Task Guardar()
+    {
+        await clientesService.Eliminar(ClienteID);
+        await UserManager.DeleteAsync(User);
+        NavigationManager.NavigateTo("/Clientes/Index");
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; } = "";
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; } = "";
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; } = "";
+
+        [Required(ErrorMessage = "El número de teléfono es obligatorio.")]
+        [Display(Name = "Número de Teléfono")]
+        [DataType(DataType.PhoneNumber)]
+        [RegularExpression(@"^\+?[0-9\s\-()]{7,15}$", ErrorMessage = "Ingrese un número de teléfono válido.")]
+        public string PhoneNumber { get; set; } = "";
+
+    }
+}
