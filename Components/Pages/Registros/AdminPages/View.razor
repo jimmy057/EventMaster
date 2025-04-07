@@ -1,0 +1,132 @@
+﻿@page "/Administradores/View/{AdminID:int}/{UserID}"
+
+@rendermode InteractiveServer
+@inject AdministradoresService administradoresService
+@inject UsuariosService usuariosService
+@inject NavigationManager navigation
+
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using EventMaster.Components.Account
+@using EventMaster.Components.Account.Pages
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using EventMaster.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject ILogger<Register> Logger
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject RoleManager<IdentityRole> RoleManager
+
+@attribute [Authorize(Roles = "admin")]
+
+<PageTitle>View</PageTitle>
+<div class="container" style="max-width: 900px;">
+    <div class="row mb-3">
+        <div class="col md-5">
+            <div>
+                <h3>Registro de <strong>Administradores</strong></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h3 class="text-center"><strong>View</strong></h3>
+        </div>
+        <div class="card-body">
+            <div class="container">
+                <div class="row mb-3">
+                    <div class="col col-md-8">
+                        <label><strong>Nombres</strong></label>
+                        <InputText disabled required class="form-control" @bind-Value="Input.Nombre" placeholder="Nombres" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-md-4">
+                        <label><strong>Email</strong></label>
+                        <InputText disabled type="email" required class="form-control" @bind-Value="Input.Email" placeholder="Email" />
+                    </div>
+                    <div class="col col-md-4">
+                        <label><strong>Teléfono (opcional)</strong></label>
+                        <InputText disabled class="form-control" @bind-Value="Input.PhoneNumber" placeholder="Teléfono" />
+                    </div>
+                </div>
+
+                <div style="width: 817px">
+                    <div class="row mb-3">
+                        <button @onclick="NavegarA" type="button" class="btn btn-secondary bi bi-arrow-left-circle">Volver</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-button {
+        background-color: #bf1ff0;
+        color: white;
+    }
+
+        .custom-button:hover {
+            background-color: #9e1ac7; /* versión más oscura */
+        }
+</style>
+
+@code {
+    private IEnumerable<IdentityError>? identityErrors;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    [Parameter]
+    public int AdminID { get; set; }
+    [Parameter]
+    public string UserID { get; set; }
+
+    public string MensajeError { get; set; } = string.Empty;
+    public Administradores Admin { get; set; } = new();
+    public ApplicationUser User { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Admin = await administradoresService.Buscar(AdminID);
+        User = await UserManager.FindByIdAsync(UserID);
+        if (User.PhoneNumber == null)
+            User.PhoneNumber = "";
+        Input.PhoneNumber = User.PhoneNumber;
+        Input.Nombre = Admin.NombreUsuario;
+        Input.Email = User.Email;
+    }
+
+    void NavegarA() { NavigationManager.NavigateTo("/Administradores/Index"); }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Fecha")]
+        [DataType(DataType.DateTime)]
+        public DateTime FechaCreacion { get; set; }
+
+        [Display(Name = "Número de Teléfono")]
+        [RegularExpression(@"^$|^\+?[0-9\s\-()]{7,15}$", ErrorMessage = "Ingrese un número de teléfono válido.")]
+        public string? PhoneNumber { get; set; }
+
+    }
+}

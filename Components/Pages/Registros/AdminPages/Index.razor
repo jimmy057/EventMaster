@@ -1,0 +1,214 @@
+﻿@page "/Administradores/Index"
+
+@rendermode InteractiveServer
+
+@inject NavigationManager NavigationManager
+@inject AdministradoresService administradoresService
+
+@attribute [Authorize(Roles = "admin")]
+
+<PageTitle>Index</PageTitle>
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col md-5">
+            <div>
+                <h3>Registro de <strong>Administradores</strong></h3>
+            </div>
+        </div>
+        <div class="col md-5 text-end">
+            <div>
+                <button @onclick="NavegarA" class="btn custom-button">Agregar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-4">
+            <label><strong>Filtrar</strong></label>
+            <div class="input-group">
+                <InputSelect class="form-select-lg" @bind-Value="@Filtro.valorEnFiltro">
+                    <option value="" selected disabled>--- Selecciona ---</option>
+                    <option value="idcliente">ID Admin</option>
+                    <option value="idusuario">ID Usuario</option>
+                    <option value="nombres">Nombre</option>
+                    <option value="fecha">Fecha de creación</option>
+                    <option value="email">Email</option>
+                </InputSelect>
+                @*btn restablecer*@
+                <button type="button" class="btn btn-sm btn-secondary bi bi-arrow-counterclockwise" @onclick="() => Restablecer()">Restablecer</button>
+            </div>
+        </div>
+
+        @*Btn Buscar*@
+        <div class="col">
+            <div class="input-group" style="width: 500px">
+                @*textbox buscar*@
+                <label>Buscar</label>
+                <div class="input-group mb-3">
+                    <InputText style="width: 400px" @bind-Value="@Filtro.CriterioBusqueda" class="form-control" placeholder="Buscar" />
+                    <button class="btn custom-button" type="button" @onclick="Buscar">Buscar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Filtro.MensajeError))
+    {
+        <div class="alert alert-danger" role="alert">
+            @Filtro.MensajeError
+        </div>
+    }
+
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ID Usuario</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Fecha de Creación</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var admin in ListaAdmins)
+                    {
+                        <tr>
+                            <td>@admin.AdminId</td>
+                            <td>@admin.UsuarioId</td>
+                            <td>@admin.NombreUsuario</td>
+                            <td>@admin.Usuario.Email</td>
+                            <td>@admin.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                            <td>@admin.Usuario.PhoneNumber</td>
+                            <td>
+                                <div class="dropdown">
+                                    <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Acción</a>
+                                    <div class="dropdown-menu">
+                                        <a href="/Administradores/View/@admin.AdminId/@admin.UsuarioId" class="dropdown-item">Ver</a>
+                                        <a href="/Administradores/Edit/@admin.AdminId/@admin.UsuarioId" class="dropdown-item">Editar</a>
+                                        <a href="/Administradores/Delete/@admin.AdminId/@admin.UsuarioId" class="dropdown-item">Eliminar</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <caption>Cant de administradores: @ListaAdmins.Count</caption>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-button {
+        background-color: #bf1ff0;
+        color: white;
+    }
+
+        .custom-button:hover {
+            background-color: #9e1ac7; /* versión más oscura */
+        }
+</style>
+
+@code {
+    public Filtro Filtro { get; set; } = new();
+    public List<Administradores> ListaAdmins { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaAdmins = await administradoresService.Listar(x => true);
+    }
+
+    void NavegarA() { NavigationManager.NavigateTo("/Administradores/Create"); }
+
+    public async Task Buscar()
+    {
+        Filtro.MensajeError = "";
+        if (string.IsNullOrEmpty(Filtro.valorEnFiltro))
+        {
+            Filtro.MensajeError = "Debe seleccionar una opcion en el filtro";
+            return;
+        }
+
+        Filtro.CriterioBusqueda.Trim().TrimEnd().ToLower();
+
+        switch (Filtro.valorEnFiltro)
+        {
+            case "idcliente":
+                if (string.IsNullOrEmpty(Filtro.CriterioBusqueda))
+                {
+                    Filtro.MensajeError = "Debe escribir un ID valido";
+                    return;
+                }
+                if (!Filtro.CriterioBusqueda.All(char.IsDigit))
+                {
+                    Filtro.MensajeError = "Debe escribir un ID valido";
+                    return;
+                }
+                ListaAdmins = await administradoresService.Listar(lt => lt.AdminId.ToString().Contains(Filtro.CriterioBusqueda));
+                break;
+
+            case "idusuario":
+                if (string.IsNullOrEmpty(Filtro.CriterioBusqueda))
+                {
+                    Filtro.MensajeError = "Debe escribir un ID valido";
+                    return;
+                }
+                ListaAdmins = await administradoresService.Listar(lt => lt.UsuarioId.Contains(Filtro.CriterioBusqueda));
+                break;
+
+            case "email":
+                if (string.IsNullOrEmpty(Filtro.CriterioBusqueda))
+                {
+                    Filtro.MensajeError = "Debe escribir un Email valido";
+                    return;
+                }
+                ListaAdmins = await administradoresService.Listar(lt => lt.Usuario.Email.Trim().ToLower()
+                                                            .Contains(Filtro.CriterioBusqueda));
+                break;
+
+            case "fecha":
+                if (Filtro.Desde == null || Filtro.Hasta == null)
+                {
+                    Filtro.MensajeError = "Ambos campos de fecha deben contener valores";
+                    return;
+                }
+                if (Filtro.Desde > Filtro.Hasta)
+                {
+                    Filtro.MensajeError = "La fecha inicial no puede ser mayor a la final";
+                    return;
+                }
+                ListaAdmins = await administradoresService.Listar(lt => lt.FechaCreacion >= Filtro.Desde && lt.FechaCreacion <= Filtro.Hasta);
+                break;
+
+            case "nombres":
+                if (string.IsNullOrEmpty(Filtro.CriterioBusqueda))
+                {
+                    Filtro.MensajeError = "Debe escribir un Nombre valido";
+                    return;
+                }
+                if (Filtro.CriterioBusqueda.Any(char.IsDigit))
+                {
+                    Filtro.MensajeError = "Debe escribir un Nombre valido";
+                    return;
+                }
+                ListaAdmins = await administradoresService.Listar(lt => lt.NombreUsuario.Trim().ToLower()
+                                                            .Contains(Filtro.CriterioBusqueda));
+                break;
+        }
+    }
+
+    public async Task Restablecer()
+    {
+        Filtro.CriterioBusqueda = string.Empty;
+        Filtro.valorEnFiltro = string.Empty;
+        Filtro.MensajeError = string.Empty;
+        Filtro.Desde = null;
+        Filtro.Hasta = null;
+        ListaAdmins = await administradoresService.Listar(x => true);
+    }
+}

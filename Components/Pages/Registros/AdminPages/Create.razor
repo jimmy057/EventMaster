@@ -1,0 +1,235 @@
+﻿@page "/Administradores/Create"
+
+@rendermode InteractiveServer
+@inject AdministradoresService administradoresService
+@inject UsuariosService usuariosService
+@inject NavigationManager navigation
+
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using EventMaster.Components.Account
+@using EventMaster.Components.Account.Pages
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using EventMaster.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject ILogger<Register> Logger
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject RoleManager<IdentityRole> RoleManager
+
+@attribute [Authorize(Roles = "admin")]
+
+<PageTitle>Create</PageTitle>
+<div class="container" style="max-width: 900px;">
+    <div class="row mb-3">
+        <div class="col md-5">
+            <div>
+                <h3>Registro de <strong>Administradores</strong></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h3 class="text-center"><strong>Create</strong></h3>
+        </div>
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(MensajeError))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @MensajeError
+                </div>
+            }
+
+            <div class="container">
+
+                <EditForm Model="Input" OnValidSubmit="Guardar" FormName="CreateAdmins">
+                    <DataAnnotationsValidator />
+
+                    <div class="row mb-3">
+                        <div class="col col-md-8">
+                            <label><strong>Nombres</strong></label>
+                            <InputText required class="form-control" @bind-Value="Input.Nombre" placeholder="Nombres" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col col-md-4">
+                            <label><strong>Email</strong></label>
+                            <InputText type="email" required class="form-control" @bind-Value="Input.Email" placeholder="Email" />
+                        </div>
+                        <div class="col col-md-4">
+                            <label><strong>Teléfono (opcional)</strong></label>
+                            <InputText class="form-control" @bind-Value="Input.PhoneNumber" placeholder="Teléfono" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col col-md-4">
+                            <label><strong>Contraseña</strong></label>
+                            <InputText type="password" required class="form-control" @bind-Value="Input.Password" placeholder="Contraseña" />
+                        </div>
+                        <div class="col col-md-4">
+                            <label><strong>Confirmar Contraseña</strong></label>
+                            <InputText type="password" required class="form-control" @bind-Value="Input.ConfirmPassword" placeholder="Confirmar Contraseña" />
+                            <ValidationMessage For="(() => Input.ConfirmPassword)"/>
+                        </div>
+                    </div>
+
+                    <div style="width: 817px">
+                        <div class="row mb-3">
+                            <button @onclick="NavegarA" type="button" class="btn btn-secondary bi bi-arrow-left-circle">Volver</button>
+                        </div>
+                        <div class="row mb-3">
+                            <button type="submit" class="btn custom-button bi bi-floppy">Guardar</button>
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-button {
+    background-color: #bf1ff0;
+    color: white;
+    }
+
+    .custom-button:hover {
+    background-color: #9e1ac7; /* versión más oscura */
+    }
+</style>
+
+@code {
+    private IEnumerable<IdentityError>? identityErrors;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    public string MensajeError { get; set; } = string.Empty;
+    public Administradores Admin { get; set; } = new();
+
+    void NavegarA() { NavigationManager.NavigateTo("/Administradores/Index"); }
+
+    public async Task Guardar()
+    {
+        if (string.IsNullOrEmpty(Input.Nombre) || string.IsNullOrEmpty(Input.Email))
+        {
+            MensajeError = "Complete los campos requeridos";
+            return;
+        }
+
+        if (await usuariosService.ValidarEmail(Input.Email))
+        {
+            MensajeError = "Este email esta ocupado";
+            return;
+        }
+
+        var user = CreateUser();
+        await UserStore.SetUserNameAsync(user, Input.Nombre, CancellationToken.None);
+        var emailStore = GetEmailStore();
+        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        await UserManager.SetPhoneNumberAsync(user, Input.PhoneNumber ?? "");
+        user.PasswordHash = Input.Password;
+        user.EmailConfirmed = true;
+        user.UserName = Input.Nombre;
+        user.NormalizedEmail = Input.Email.ToUpper();
+        user.NormalizedUserName = user.UserName.ToUpper();
+        var result = await UserStore.CreateAsync(user, CancellationToken.None);
+
+        if (!result.Succeeded)
+        {
+            MensajeError = "Algo fallo al crear el usuario";
+            identityErrors = result.Errors;
+            await UserManager.DeleteAsync(user);
+            return;
+        }
+
+        var rol = "admin";
+        if (!await RoleManager.RoleExistsAsync(rol))
+            await RoleManager.CreateAsync(new IdentityRole(rol));
+
+        await UserManager.AddToRoleAsync(user, rol);
+
+        if (!result.Succeeded)
+        {
+            await UserManager.DeleteAsync(user);
+            return;
+        }
+
+        Logger.LogInformation("Se creo el usuario.");
+        var userId = await UserManager.GetUserIdAsync(user);
+        var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+        Admin.UsuarioId = user.Id;
+        Admin.FechaCreacion = DateTime.Now;
+        Admin.NombreUsuario = Input.Nombre;
+        
+        await administradoresService.Guardar(Admin);
+        NavigationManager.NavigateTo("/Administradores/Index");
+    }
+
+    private ApplicationUser CreateUser()
+    {
+        try
+        {
+            return Activator.CreateInstance<ApplicationUser>();
+        }
+        catch
+        {
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+        }
+    }
+
+    private IUserEmailStore<ApplicationUser> GetEmailStore()
+    {
+        if (!UserManager.SupportsUserEmail)
+        {
+            throw new NotSupportedException("The default UI requires a user store with email support.");
+        }
+        return (IUserEmailStore<ApplicationUser>)UserStore;
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Fecha")]
+        [DataType(DataType.DateTime)]
+        public DateTime FechaCreacion { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; } = "";
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "Las contraseñas deben coincidir.")]
+        public string ConfirmPassword { get; set; } = "";
+
+        [Display(Name = "Número de Teléfono")]
+        [DataType(DataType.PhoneNumber)]
+        [RegularExpression(@"^\+?[0-9\s\-()]{7,15}$", ErrorMessage = "Ingrese un número de teléfono válido.")]
+        public string? PhoneNumber { get; set; }
+
+    }
+}
