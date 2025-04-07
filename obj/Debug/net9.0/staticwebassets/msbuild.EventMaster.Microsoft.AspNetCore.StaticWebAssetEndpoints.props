@@ -112,13 +112,13 @@
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\css\style.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-gxZaG3VoybIAe7Xe8AyZY36MOnTnpruC9FYivqItoIo="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"20101"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022gxZaG3VoybIAe7Xe8AyZY36MOnTnpruC9FYivqItoIo=\u0022"},{"Name":"Last-Modified","Value":"Sun, 06 Apr 2025 21:47:36 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"20101"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022gxZaG3VoybIAe7Xe8AyZY36MOnTnpruC9FYivqItoIo=\u0022"},{"Name":"Last-Modified","Value":"Sun, 06 Apr 2025 22:21:11 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/EventMaster/assets/css/style.fxd4noa6mm.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\css\style.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"fxd4noa6mm"},{"Name":"integrity","Value":"sha256-gxZaG3VoybIAe7Xe8AyZY36MOnTnpruC9FYivqItoIo="},{"Name":"label","Value":"_content/EventMaster/assets/css/style.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"20101"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022gxZaG3VoybIAe7Xe8AyZY36MOnTnpruC9FYivqItoIo=\u0022"},{"Name":"Last-Modified","Value":"Sun, 06 Apr 2025 21:47:36 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"20101"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022gxZaG3VoybIAe7Xe8AyZY36MOnTnpruC9FYivqItoIo=\u0022"},{"Name":"Last-Modified","Value":"Sun, 06 Apr 2025 22:21:11 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/EventMaster/assets/download/browney.txt">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\download\browney.txt'))</AssetFile>

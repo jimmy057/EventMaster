@@ -210,7 +210,6 @@ C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\staticwebas
 C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\staticwebassets\msbuild.buildMultiTargeting.EventMaster.props
 C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\staticwebassets\msbuild.buildTransitive.EventMaster.props
 C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\staticwebassets.pack.json
-C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\EventMas.ED248FAB.Up2Date
 C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\EventMaster.dll
 C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\refint\EventMaster.dll
@@ -266,3 +265,4 @@ C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\compressed\
 C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\compressed\87o8nfylz5-p98fb93q5y.gz
 C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\compressed\l36h6glpgb-ailknvva4i.gz
 C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\compressed\j2b8xy6ijn-fxd4noa6mm.gz
+C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
