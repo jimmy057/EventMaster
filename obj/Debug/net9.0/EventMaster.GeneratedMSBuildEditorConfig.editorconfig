@@ -17,273 +17,273 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = EventMaster
 build_property.RootNamespace = EventMaster
-build_property.ProjectDir = C:\Users\IngYT\source\repos\EventMaster\EventMaster\
+build_property.ProjectDir = C:\Users\IngYT\source\repos\EventMaster\eventmaster\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\IngYT\source\repos\EventMaster\EventMaster
+build_property.MSBuildProjectDirectory = C:\Users\IngYT\source\repos\EventMaster\eventmaster
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/AccessDenied.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/AccessDenied.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXEFjY2Vzc0RlbmllZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/ConfirmEmail.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/ConfirmEmail.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXENvbmZpcm1FbWFpbC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/ConfirmEmailChange.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/ConfirmEmailChange.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXENvbmZpcm1FbWFpbENoYW5nZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/ExternalLogin.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/ExternalLogin.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXEV4dGVybmFsTG9naW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/ForgotPassword.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/ForgotPassword.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXEZvcmdvdFBhc3N3b3JkLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/ForgotPasswordConfirmation.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/ForgotPasswordConfirmation.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXEZvcmdvdFBhc3N3b3JkQ29uZmlybWF0aW9uLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/InvalidPasswordReset.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/InvalidPasswordReset.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXEludmFsaWRQYXNzd29yZFJlc2V0LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/InvalidUser.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/InvalidUser.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXEludmFsaWRVc2VyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Lockout.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Lockout.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXExvY2tvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Login.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Login.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXExvZ2luLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/LoginWith2fa.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/LoginWith2fa.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXExvZ2luV2l0aDJmYS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/LoginWithRecoveryCode.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/LoginWithRecoveryCode.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXExvZ2luV2l0aFJlY292ZXJ5Q29kZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Manage/ChangePassword.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Manage/ChangePassword.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxDaGFuZ2VQYXNzd29yZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Manage/DeletePersonalData.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Manage/DeletePersonalData.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxEZWxldGVQZXJzb25hbERhdGEucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Manage/Disable2fa.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Manage/Disable2fa.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxEaXNhYmxlMmZhLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Manage/Email.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Manage/Email.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxFbWFpbC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Manage/EnableAuthenticator.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Manage/EnableAuthenticator.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxFbmFibGVBdXRoZW50aWNhdG9yLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Manage/ExternalLogins.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Manage/ExternalLogins.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxFeHRlcm5hbExvZ2lucy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Manage/GenerateRecoveryCodes.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Manage/GenerateRecoveryCodes.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxHZW5lcmF0ZVJlY292ZXJ5Q29kZXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Manage/Index.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Manage/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxJbmRleC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Manage/PersonalData.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Manage/PersonalData.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxQZXJzb25hbERhdGEucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Manage/ResetAuthenticator.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Manage/ResetAuthenticator.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxSZXNldEF1dGhlbnRpY2F0b3IucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Manage/SetPassword.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Manage/SetPassword.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxTZXRQYXNzd29yZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Manage/TwoFactorAuthentication.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Manage/TwoFactorAuthentication.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxUd29GYWN0b3JBdXRoZW50aWNhdGlvbi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Manage/_Imports.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Manage/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxfSW1wb3J0cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/Register.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/Register.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXFJlZ2lzdGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/RegisterConfirmation.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/RegisterConfirmation.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXFJlZ2lzdGVyQ29uZmlybWF0aW9uLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/ResendEmailConfirmation.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/ResendEmailConfirmation.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXFJlc2VuZEVtYWlsQ29uZmlybWF0aW9uLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/ResetPassword.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/ResetPassword.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXFJlc2V0UGFzc3dvcmQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/ResetPasswordConfirmation.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/ResetPasswordConfirmation.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXFJlc2V0UGFzc3dvcmRDb25maXJtYXRpb24ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Pages/_Imports.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Pages/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXF9JbXBvcnRzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Shared/ExternalLoginPicker.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Shared/ExternalLoginPicker.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFNoYXJlZFxFeHRlcm5hbExvZ2luUGlja2VyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Shared/ManageLayout.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Shared/ManageLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFNoYXJlZFxNYW5hZ2VMYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Shared/ManageNavMenu.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Shared/ManageNavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFNoYXJlZFxNYW5hZ2VOYXZNZW51LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Shared/RedirectToLogin.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Shared/RedirectToLogin.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFNoYXJlZFxSZWRpcmVjdFRvTG9naW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Shared/ShowRecoveryCodes.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Shared/ShowRecoveryCodes.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFNoYXJlZFxTaG93UmVjb3ZlcnlDb2Rlcy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Account/Shared/StatusMessage.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Account/Shared/StatusMessage.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFNoYXJlZFxTdGF0dXNNZXNzYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/App.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/App.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Auth.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Auth.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBdXRoLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Counter.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb3VudGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Error.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Error.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Home.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/Actividades/Create.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/Actividades/Create.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWN0aXZpZGFkZXNcQ3JlYXRlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/Actividades/Delete.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/Actividades/Delete.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWN0aXZpZGFkZXNcRGVsZXRlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/Actividades/Edit.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/Actividades/Edit.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWN0aXZpZGFkZXNcRWRpdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/Actividades/Index.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/Actividades/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWN0aXZpZGFkZXNcSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/Actividades/View.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/Actividades/View.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWN0aXZpZGFkZXNcVmlldy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/AdminPages/Create.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/AdminPages/Create.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWRtaW5QYWdlc1xDcmVhdGUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/AdminPages/Delete.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/AdminPages/Delete.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWRtaW5QYWdlc1xEZWxldGUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/AdminPages/Edit.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/AdminPages/Edit.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWRtaW5QYWdlc1xFZGl0LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/AdminPages/Index.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/AdminPages/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWRtaW5QYWdlc1xJbmRleC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/AdminPages/View.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/AdminPages/View.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWRtaW5QYWdlc1xWaWV3LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/ClientesPages/Create.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/ClientesPages/Create.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQ2xpZW50ZXNQYWdlc1xDcmVhdGUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/ClientesPages/Delete.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/ClientesPages/Delete.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQ2xpZW50ZXNQYWdlc1xEZWxldGUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/ClientesPages/Edit.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/ClientesPages/Edit.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQ2xpZW50ZXNQYWdlc1xFZGl0LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/ClientesPages/Index.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/ClientesPages/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQ2xpZW50ZXNQYWdlc1xJbmRleC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/ClientesPages/View.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/ClientesPages/View.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQ2xpZW50ZXNQYWdlc1xWaWV3LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/EventosPages/Create.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/EventosPages/Create.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcRXZlbnRvc1BhZ2VzXENyZWF0ZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/EventosPages/Index.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Registros/EventosPages/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcRXZlbnRvc1BhZ2VzXEluZGV4LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/VerRegistros.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/VerRegistros.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xWZXJSZWdpc3Ryb3MucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Weather.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Pages/Weather.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xXZWF0aGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Routes.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Routes.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSb3V0ZXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/_Imports.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xfSW1wb3J0cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Layout/MainLayout.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Layout/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-85v399msq7
 
-[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Layout/NavMenu.razor]
+[C:/Users/IngYT/source/repos/EventMaster/eventmaster/Components/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-pjldhzjina
