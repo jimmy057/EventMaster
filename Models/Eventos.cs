@@ -7,6 +7,8 @@ public class Eventos
 {
 	[Key]
 	public int EventoId { get; set; }
+	public int ClienteId { get; set; }
+	public Clientes? Cliente { get; set; }
 	public string TituloEvento { get; set; }
 	public string Direccion { get; set; }
 	public int Cupos { get; set; }
