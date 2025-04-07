@@ -55,6 +55,7 @@ public class EventosService(IDbContextFactory<ApplicationDbContext> DbFactory)
 	{
 		await using var contexto = await DbFactory.CreateDbContextAsync();
 		return await contexto.Eventos
+			.Include(x => x.ListaDetalle)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(c => c.EventoId == id);
 	}
