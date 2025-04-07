@@ -64,8 +64,15 @@
 
                 <div class="row mb-3">
                     <div class="col col-md-8">
+                        <label><strong>Participantes</strong></label>
+                        <InputNumber required class="form-control" @bind-Value="Input.Participantes" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col col-md-8">
                         <label><strong>Descripción</strong></label>
-                        <InputText disabled class="form-control" @bind-Value="Input.Descripcion" placeholder="Descripción" />
+                        <InputTextArea disabled class="form-control" @bind-Value="Input.Descripcion" placeholder="Descripción" />
                     </div>
                 </div>
 
@@ -84,13 +91,13 @@
 
 <style>
     .custom-button {
-        background-color: #bf1ff0;
-        color: white;
+    background-color: #bf1ff0;
+    color: white;
     }
 
-        .custom-button:hover {
-            background-color: #9e1ac7; /* versión más oscura */
-        }
+    .custom-button:hover {
+    background-color: #9e1ac7; /* versión más oscura */
+    }
 </style>
 
 @code {
@@ -121,6 +128,8 @@
         Input.Titulo = Actividad.TituloActividad;
         Input.Tipo = Actividad.TipoActividad;
         Input.Descripcion = Actividad.Descripcion;
+        Input.Participantes = Actividad.Participantes;
+
     }
 
     public async Task Eliminar()
@@ -149,5 +158,9 @@
         [Required]
         [Display(Name = "Descripcion")]
         public string Descripcion { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Participantes")]
+        public int Participantes { get; set; }
     }
 }

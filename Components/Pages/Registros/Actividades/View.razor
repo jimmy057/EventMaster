@@ -57,15 +57,15 @@
 
                 <div class="row mb-3">
                     <div class="col col-md-8">
-                        <label><strong>Tipo de Actividad</strong></label>
-                        <InputText disabled class="form-control" @bind-Value="Input.Tipo" placeholder="Tipo de Actividad" />
+                        <label><strong>Participantes</strong></label>
+                        <InputNumber required class="form-control" @bind-Value="Input.Participantes" />
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col col-md-8">
                         <label><strong>Descripción</strong></label>
-                        <InputText disabled class="form-control" @bind-Value="Input.Descripcion" placeholder="Descripción" />
+                        <InputTextArea disabled class="form-control" @bind-Value="Input.Descripcion" placeholder="Descripción" />
                     </div>
                 </div>
 
@@ -118,6 +118,7 @@
         Input.Titulo = Actividad.TituloActividad;
         Input.Tipo = Actividad.TipoActividad;
         Input.Descripcion = Actividad.Descripcion;
+        Input.Participantes = Actividad.Participantes;
     }
 
     private sealed class InputModel
@@ -133,5 +134,9 @@
         [Required]
         [Display(Name = "Descripcion")]
         public string Descripcion { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Participantes")]
+        public int Participantes { get; set; }
     }
 }

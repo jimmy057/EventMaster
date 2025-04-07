@@ -68,8 +68,15 @@
 
                     <div class="row mb-3">
                         <div class="col col-md-8">
+                            <label><strong>Participantes</strong></label>
+                            <InputNumber required class="form-control" @bind-Value="Input.Participantes"/>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col col-md-8">
                             <label><strong>Descripción</strong></label>
-                            <InputText required class="form-control" @bind-Value="Input.Descripcion" placeholder="Descripción" />
+                            <InputTextArea required class="form-control" @bind-Value="Input.Descripcion" placeholder="Descripción" />
                         </div>
                     </div>
 
@@ -124,7 +131,7 @@
 
     public async Task Guardar()
     {
-        if (string.IsNullOrEmpty(Input.Titulo) || string.IsNullOrEmpty(Input.Descripcion) || string.IsNullOrEmpty(Input.Tipo))
+        if (string.IsNullOrEmpty(Input.Titulo) || string.IsNullOrEmpty(Input.Descripcion) || string.IsNullOrEmpty(Input.Tipo) || Input.Participantes <= 0)
         {
             MensajeError = "Complete los campos requeridos";
             return;
@@ -133,6 +140,7 @@
         Actividad.TituloActividad = Input.Titulo;
         Actividad.TipoActividad = Input.Tipo;
         Actividad.Descripcion = Input.Descripcion;
+        Actividad.Participantes = Input.Participantes;
         Actividad.IdCliente = ClienteID;
 
         await actividadesService.Guardar(Actividad);
@@ -152,5 +160,9 @@
         [Required]
         [Display(Name = "Descripcion")]
         public string Descripcion { get; set; } = "";
+        
+        [Required]
+        [Display(Name = "Participantes")]
+        public int Participantes { get; set; }
     }
 }
