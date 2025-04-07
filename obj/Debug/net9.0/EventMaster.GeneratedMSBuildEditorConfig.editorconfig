@@ -196,6 +196,26 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/Actividades/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWN0aXZpZGFkZXNcQ3JlYXRlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/Actividades/Delete.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWN0aXZpZGFkZXNcRGVsZXRlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/Actividades/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWN0aXZpZGFkZXNcRWRpdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/Actividades/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWN0aXZpZGFkZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/Actividades/View.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWN0aXZpZGFkZXNcVmlldy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/AdminPages/Create.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQWRtaW5QYWdlc1xDcmVhdGUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
@@ -234,6 +254,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Registros/ClientesPages/View.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Ryb3NcQ2xpZW50ZXNQYWdlc1xWaWV3LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/VerRegistros.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xWZXJSZWdpc3Ryb3MucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/IngYT/source/repos/EventMaster/EventMaster/Components/Pages/Weather.razor]
