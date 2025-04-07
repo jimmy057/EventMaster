@@ -1,30 +1,50 @@
 ﻿@inherits LayoutComponentBase
+@inject UserManager<ApplicationUser> UserManager
+@inject ClientesService clientesService
+
 
 <div class="page">
-
     <main>
         <div class="top-row d-flex justify-content-between">
-            <div class="pt-3 text-start">
-                <a href="/">
-                    <h1 class="header-text" style="color: #bf1ff0;">EventMaster</h1>
-                </a>
+            <div class="col">
+                <div class="row pt-2">
+                    <div class="col-auto">
+                        <a href="/">
+                            <h1 class="header-text" style="color: #bf1ff0;">EventMaster</h1>
+                        </a>
+                    </div>
+                    <AuthorizeView Roles="admin">
+                        <Authorized>
+                            <div class="col-auto" style="margin-left: 5px; padding-top: 10px">
+                                <div class="dropdown">
+                                    <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Registros</a>
+                                    <div class="dropdown-menu">
+                                        <a href="/Clientes/Index" class="dropdown-item">Clientes</a>
+                                        <a href="/Administradores/Index" class="dropdown-item">Administradores</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </Authorized>
+                    </AuthorizeView>
+                    <AuthorizeView Roles="cliente">
+                        <Authorized>
+                            <div class="col-auto" style="margin-left: 5px; padding-top: 10px">
+                                <a href="/Ver-Registros">Ver Registros</a>
+                            </div>
+                        </Authorized>
+                    </AuthorizeView>
+                </div>
             </div>
 
-            <AuthorizeView Roles="admin">
-                <Authorized>
-                    <div class="d-flex justify-content-end">
-                        <a style="color: #bf1ff0;" href="/Administradores/Index">Administradores</a>
-                        <a style="color: #bf1ff0;" href="/Clientes/Index">Clientes</a>
-                    </div>
-                </Authorized>
-            </AuthorizeView>
+
+
+
 
             <AuthorizeView>
                 <Authorized>
                     <div class="d-flex justify-content-end" style="padding-right: 50px">
-
-                        <span>Bienvenido, @NombreUsuarioAutenticado!</span>
-                        <a href="/Account/Manage">Mi Cuenta</a>
+                        <span>Bienvenidx, @NombreUsuarioAutenticado!</span>
+                        <a style="padding-right: 10px" href="/Account/Manage">Mi Cuenta</a>
                         <span>
                             <form action="Account/Logout" method="post">
                                 <AntiforgeryToken />
@@ -69,6 +89,8 @@
 
     [Inject]
     AuthenticationStateProvider AuthStateProvider { get; set; } = null!;
+
+    public ApplicationUser User { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
