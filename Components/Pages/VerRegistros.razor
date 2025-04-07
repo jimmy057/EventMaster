@@ -1,0 +1,42 @@
+﻿@page "/Ver-Registros"
+
+<PageTitle>Registros</PageTitle>
+
+@inject ClientesService clientesService
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+
+
+@attribute [Authorize(Roles = "admin, cliente")]
+
+<div>
+    <button @onclick="Actividades" class="btn btn-primary">Actividades</button>
+    <button @onclick="Eventos" class="btn btn-primary">Eventos</button>
+</div>
+
+@code {
+    public ApplicationUser User { get; set; }
+    public Clientes Cliente { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var userAutenticado = authState.User;
+        if (userAutenticado.Identity != null && userAutenticado.Identity.IsAuthenticated)
+        {
+            var email = userAutenticado.FindFirst(ClaimTypes.Email)?.Value;
+            User = await UserManager.FindByEmailAsync(email);
+            Cliente = await clientesService.BuscarPorUsuarioId(User.Id);
+        }
+    }
+    public void Actividades()
+    {
+        NavigationManager.NavigateTo($"/Actividades/Index/{Cliente.ClienteId}/{User.Id}");
+    }
+
+    public void Eventos()
+    {
+        NavigationManager.NavigateTo($"/Actividades/Index/{Cliente.ClienteId}/{User.Id}");
+    }
+}
