@@ -265,4 +265,3 @@ C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\compressed\
 C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\compressed\87o8nfylz5-p98fb93q5y.gz
 C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\compressed\l36h6glpgb-ailknvva4i.gz
 C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\compressed\j2b8xy6ijn-fxd4noa6mm.gz
-C:\Users\IngYT\source\repos\EventMaster\EventMaster\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
