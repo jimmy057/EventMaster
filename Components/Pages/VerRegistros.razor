@@ -10,10 +10,36 @@
 
 @attribute [Authorize(Roles = "admin, cliente")]
 
-<div>
-    <button @onclick="Actividades" class="btn btn-primary">Actividades</button>
-    <button @onclick="Eventos" class="btn btn-primary">Eventos</button>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg text-center" style="width: 400px;">
+        <div class="card-header">
+            <h3>Mis registros</h3>
+        </div>
+        <div class="card-body">
+            <button @onclick="Actividades" class="btn custom-button mb-3 w-100">Actividades</button>
+            <button @onclick="Eventos" class="btn custom-button w-100">Eventos</button>
+        </div>
+    </div>
 </div>
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .custom-button {
+        background-color: #bf1ff0;
+        color: white;
+    }
+
+        .custom-button:hover {
+            background-color: #9e1ac7;
+        }
+</style>
+
 
 @code {
     public ApplicationUser User { get; set; }
