@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ZbV7Neu4okxMIO7K0UmUx59+QAjomKjI9SvmjvO1EZM=",
+  "Hash": "rlEvcgpdYM7d6TAOoNV++I7mxW9CjhXhSMepqZLPhIg=",
   "Source": "EventMaster",
   "BasePath": "_content/EventMaster",
   "Mode": "Default",
@@ -3244,8 +3244,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "coygv5zdye",
-      "Integrity": "jDYuvymBHfpNOIfjVA9qxgn/i4RO07SmWU2pz1SSpUg=",
+      "Fingerprint": "g8mqxj9yjd",
+      "Integrity": "EPCdRbD3rnVNwiVTsc+aqX1CtUt5UYYtEs20V2IIIOg=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\images\\about\\welcome-banner.jpg"
@@ -10822,7 +10822,7 @@
       ]
     },
     {
-      "Route": "assets/images/about/welcome-banner.coygv5zdye.jpg",
+      "Route": "assets/images/about/welcome-banner.g8mqxj9yjd.jpg",
       "AssetFile": "C:\\Users\\IngYT\\source\\repos\\EventMaster\\EventMaster\\wwwroot\\assets\\images\\about\\welcome-banner.jpg",
       "Selectors": [],
       "ResponseHeaders": [
@@ -10832,7 +10832,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "84907"
+          "Value": "181880"
         },
         {
           "Name": "Content-Type",
@@ -10840,11 +10840,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"jDYuvymBHfpNOIfjVA9qxgn/i4RO07SmWU2pz1SSpUg=\""
+          "Value": "\"EPCdRbD3rnVNwiVTsc+aqX1CtUt5UYYtEs20V2IIIOg=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 07 May 2018 02:57:52 GMT"
+          "Value": "Tue, 08 Apr 2025 23:32:13 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -10854,7 +10854,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "coygv5zdye"
+          "Value": "g8mqxj9yjd"
         },
         {
           "Name": "label",
@@ -10862,7 +10862,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-jDYuvymBHfpNOIfjVA9qxgn/i4RO07SmWU2pz1SSpUg="
+          "Value": "sha256-EPCdRbD3rnVNwiVTsc+aqX1CtUt5UYYtEs20V2IIIOg="
         }
       ]
     },
@@ -10877,7 +10877,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "84907"
+          "Value": "181880"
         },
         {
           "Name": "Content-Type",
@@ -10885,11 +10885,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"jDYuvymBHfpNOIfjVA9qxgn/i4RO07SmWU2pz1SSpUg=\""
+          "Value": "\"EPCdRbD3rnVNwiVTsc+aqX1CtUt5UYYtEs20V2IIIOg=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Mon, 07 May 2018 02:57:52 GMT"
+          "Value": "Tue, 08 Apr 2025 23:32:13 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -10899,7 +10899,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-jDYuvymBHfpNOIfjVA9qxgn/i4RO07SmWU2pz1SSpUg="
+          "Value": "sha256-EPCdRbD3rnVNwiVTsc+aqX1CtUt5UYYtEs20V2IIIOg="
         }
       ]
     },
