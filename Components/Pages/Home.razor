@@ -1,4 +1,8 @@
 ﻿@page "/"
+@inject NavigationManager NavigationManager
+@inject ClientesService clientesService
+@inject AdministradoresService administradoresService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Home</PageTitle>
 
@@ -6,138 +10,176 @@
     <!--[if lte IE 9]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
     <![endif]-->
-
     <!-- top-area End -->
     <!--welcome-hero start -->
-    <section id="welcome-hero" class="welcome-hero">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <div class="header-text">
-                        <h2><span>¡</span>Hola <span>,</span> bienvenido a EventMaster <span>!</span>   </h2>
-                        <p>La mejor gestión de eventos dirigida por tí</p>
-                        <a href="/Account/Register">Registrarse</a>
-                    </div><!--/.header-text-->
-                </div><!--/.col-->
-            </div><!-- /.row-->
-        </div><!-- /.container-->
+    <AuthorizeView>
+        <Authorized>
+            <section id="welcome-hero" class="welcome-hero">
+                <div class="container">
+                    <div class="col-md-12 text-center">
+                        <div class="header-text">
+                            <h2>Dashboard</h2>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-3 text-center">
+                            <div class="header-text p-4 rounded" style="background-color: #d92cf9; height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <i class="bi bi-people-fill fs-1" style="color: white;"></i>
+                                <h3 style="color: white;">Clientes</h3>
+                                <h3 style="color: white;">@ListaClientes.Count</h3>
+                                <button type="button" @onclick="IrAClientes" class="btn btn-light mt-3" style="width: 150px;">Ir a Clientes</button>
+                            </div>
+                        </div>
 
-    </section><!--/.welcome-hero-->
-    <!--welcome-hero end -->
-
-    <!--about start -->
-    <section id="about" class="about">
-        <div class="section-heading text-center">
-            <h2>About Us</h2>
-        </div>
-        <div class="container">
-            <div class="about-content">
-                <div class="row justify-content-center">
-                    <div class="col-sm-8 text-center">
-                        <div class="single-about-txt">
-                            <h3>
-                                ¡Te ayudamos a organizar tus mejores recuerdos!
-                            </h3>
-                            <p>
-                                En <strong>EventMaster</strong> ofrecemos la mejor plataforma para que gestiones tus propios eventos de forma fácil, rápida y totalmente personalizada. Con nuestros servicios, puedes organizar desde reuniones pequeñas hasta grandes celebraciones, todo desde un solo lugar y con herramientas intuitivas que te dan el control total. Hacemos que cada detalle cuente, brindándote la libertad de crear experiencias únicas a tu manera.
-                            </p>
-
-                            <div class="row justify-content-center">
-                                <div class="col-sm-4">
-                                    <div class="single-about-add-info">
-                                        <h3>Teléfono</h3>
-                                        <p>809-123-1234</p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="single-about-add-info">
-                                        <h3>Email</h3>
-                                        <p>info@EventMaster.com</p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="single-about-add-info">
-                                        <h3>GitHub</h3>
-                                        <p><a href="https://github.com/jimmy057/EventMaster">Repositorio</a></p>
-                                    </div>
-                                </div>
-                            </div> <!-- row -->
+                        <div class="col-md-3 text-center">
+                            <div class="header-text p-4 rounded" style="background-color: #d92cf9; height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <i class="bi bi-person-fill-gear fs-1" style="color: white;"></i>
+                                <h3 style="color: white;">Admins</h3>
+                                <h3 style="color: white;">@ListaAdmins.Count</h3>
+                                <button type="button" @onclick="irAdmin" class="btn btn-light mt-3" style="width: 150px;">Ir a Admins</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
+        </Authorized>
+        <NotAuthorized>
+            <section id="welcome-hero" class="welcome-hero">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <div class="header-text">
+                                <h2><span>¡</span>Hola <span>,</span> bienvenido a EventMaster<span>!</span>   </h2>
+                                <p>La mejor gestión de eventos dirigida por tí</p>
+                                <a href="/Account/Register">Registrarse</a>
+                            </div><!--/.header-text-->
+                        </div><!--/.col-->
+                    </div><!-- /.row-->
+                </div><!-- /.container-->
+
+            </section><!--/.welcome-hero-->
+        </NotAuthorized>
+    </AuthorizeView>
+    <!--welcome-hero end -->
+    <!--about start -->
+    <AuthorizeView>
+        <NotAuthorized>
+            <section id="about" class="about">
+                <div class="section-heading text-center">
+                    <h2>About Us</h2>
+                </div>
+                <div class="container">
+                    <div class="about-content">
+                        <div class="row justify-content-center">
+                            <div class="col-sm-8 text-center">
+                                <div class="single-about-txt">
+                                    <h3>
+                                        ¡Te ayudamos a organizar tus mejores recuerdos!
+                                    </h3>
+                                    <p>
+                                        En <strong>EventMaster</strong> ofrecemos la mejor plataforma para que gestiones tus propios eventos de forma fácil, rápida y totalmente personalizada. Con nuestros servicios, puedes organizar desde reuniones pequeñas hasta grandes celebraciones, todo desde un solo lugar y con herramientas intuitivas que te dan el control total. Hacemos que cada detalle cuente, brindándote la libertad de crear experiencias únicas a tu manera.
+                                    </p>
+
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-4">
+                                            <div class="single-about-add-info">
+                                                <h3>Teléfono</h3>
+                                                <p>809-123-1234</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="single-about-add-info">
+                                                <h3>Email</h3>
+                                                <p>info@EventMaster.com</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="single-about-add-info">
+                                                <h3>GitHub</h3>
+                                                <p><a href="https://github.com/jimmy057/EventMaster">Repositorio</a></p>
+                                            </div>
+                                        </div>
+                                    </div> <!-- row -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </NotAuthorized>
+    </AuthorizeView>
     <!--/.about-->
     <!--about end -->
-
     <!--portfolio start -->
-    <section id="portfolio" class="portfolio">
-        <div class="portfolio-details">
-            <div class="section-heading text-center">
-                <h2>Nuestras Experiencias</h2>
-            </div>
-            <div class="container">
-                <div class="portfolio-content">
-                    <div class="isotope">
-                        <div class="row">
+    <AuthorizeView>
+        <NotAuthorized>
+            <section id="portfolio" class="portfolio">
+                <div class="portfolio-details">
+                    <div class="section-heading text-center">
+                        <h2>Nuestras Experiencias</h2>
+                    </div>
+                    <div class="container">
+                        <div class="portfolio-content">
+                            <div class="isotope">
+                                <div class="row">
 
-                            <div class="col-sm-4">
-                                <div class="item">
-                                    <img src="/assets/images/portfolio/p1.jpg" alt="portfolio image" />
-                                    <div class="isotope-overlay">
-                                        <a href="#">
-                                            Bodas
-                                        </a>
-                                    </div><!-- /.isotope-overlay -->
-                                </div><!-- /.item -->
-                                <div class="item">
-                                    <img src="/assets/images/portfolio/p2.jpg" alt="portfolio image" />
-                                    <div class="isotope-overlay">
-                                        <a href="#">
-                                            Cumpleaños
-                                        </a>
-                                    </div><!-- /.isotope-overlay -->
-                                </div><!-- /.item -->
-                            </div><!-- /.col -->
+                                    <div class="col-sm-4">
+                                        <div class="item">
+                                            <img src="/assets/images/portfolio/p1.jpg" alt="portfolio image" />
+                                            <div class="isotope-overlay">
+                                                <a href="#">
+                                                    Bodas
+                                                </a>
+                                            </div><!-- /.isotope-overlay -->
+                                        </div><!-- /.item -->
+                                        <div class="item">
+                                            <img src="/assets/images/portfolio/p2.jpg" alt="portfolio image" />
+                                            <div class="isotope-overlay">
+                                                <a href="#">
+                                                    Cumpleaños
+                                                </a>
+                                            </div><!-- /.isotope-overlay -->
+                                        </div><!-- /.item -->
+                                    </div><!-- /.col -->
 
-                            <div class="col-sm-4">
-                                <div class="item">
-                                    <img src="/assets/images/portfolio/p3.jpg" alt="portfolio image" style="width: 100%; height: 200%;" />                                    <div class="isotope-overlay">
-                                        <a href="#">
-                                            Conciertos
-                                        </a>
-                                    </div><!-- /.isotope-overlay -->
-                                </div><!-- /.item -->
-                            </div><!-- /.col -->
+                                    <div class="col-sm-4">
+                                        <div class="item">
+                                            <img src="/assets/images/portfolio/p3.jpg" alt="portfolio image" style="width: 100%; height: 200%;" />                                    <div class="isotope-overlay">
+                                                <a href="#">
+                                                    Conciertos
+                                                </a>
+                                            </div><!-- /.isotope-overlay -->
+                                        </div><!-- /.item -->
+                                    </div><!-- /.col -->
 
-                            <div class="col-sm-4">
-                                <div class="item">
-                                    <img src="/assets/images/portfolio/p4.jpg" alt="portfolio image" />
-                                    <div class="isotope-overlay">
-                                        <a href="#">
-                                            seminarios
-                                        </a>
-                                    </div><!-- /.isotope-overlay -->
-                                </div><!-- /.item -->
-                                <div class="item">
-                                    <img src="/assets/images/portfolio/p5.jpg" alt="portfolio image" />
-                                    <div class="isotope-overlay">
-                                        <a href="#">
-                                            exposiciones
-                                        </a>
-                                    </div><!-- /.isotope-overlay -->
-                                </div><!-- /.item -->
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
-                    </div><!--/.isotope-->
-                </div><!--/.gallery-content-->
-            </div><!--/.container-->
-        </div><!--/.portfolio-details-->
+                                    <div class="col-sm-4">
+                                        <div class="item">
+                                            <img src="/assets/images/portfolio/p4.jpg" alt="portfolio image" />
+                                            <div class="isotope-overlay">
+                                                <a href="#">
+                                                    seminarios
+                                                </a>
+                                            </div><!-- /.isotope-overlay -->
+                                        </div><!-- /.item -->
+                                        <div class="item">
+                                            <img src="/assets/images/portfolio/p5.jpg" alt="portfolio image" />
+                                            <div class="isotope-overlay">
+                                                <a href="#">
+                                                    exposiciones
+                                                </a>
+                                            </div><!-- /.isotope-overlay -->
+                                        </div><!-- /.item -->
+                                    </div><!-- /.col -->
+                                </div><!-- /.row -->
+                            </div><!--/.isotope-->
+                        </div><!--/.gallery-content-->
+                    </div><!--/.container-->
+                </div><!--/.portfolio-details-->
 
-    </section><!--/.portfolio-->
+            </section><!--/.portfolio-->
+        </NotAuthorized>
+    </AuthorizeView>
     <!--portfolio end -->
-
     <!--footer-copyright start-->
     <footer id="footer-copyright" class="footer-copyright">
         <div class="container">
@@ -157,3 +199,22 @@
 
     </footer><!--/.footer-copyright-->
 </body>
+
+@code {
+    private bool isAdmin;
+    private void IrAClientes() => NavigationManager.NavigateTo("/Clientes/Index");
+    private void irAdmin() => NavigationManager.NavigateTo("/Administradores/Index");
+    private List<Administradores> ListaAdmins { get; set; } = new();
+    private List<Clientes> ListaClientes { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authenticationState.User;
+        if (user.IsInRole("admin"))
+        {
+            ListaAdmins = await administradoresService.Listar(x => true);
+            ListaClientes = await clientesService.Listar(x => true);
+        }
+    }
+}
