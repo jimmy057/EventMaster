@@ -11,10 +11,11 @@ public class Eventos
 	public Clientes? Cliente { get; set; }
 	public string TituloEvento { get; set; }
 	public string Direccion { get; set; }
+	public int Cupos { get; set; }
 	public double PrecioEntradaEvento { get; set; }
 	public DateTime FechaInicio { get; set; }
 	public string Nota { get; set; }
-	public List<EventosDetalle> ListaDetalle { get; set; } = new();
+	public List<EventosDetalle> ListaDetalle { get; set; }
 	[NotMapped]
 	public string EstadoEvento
 	{
