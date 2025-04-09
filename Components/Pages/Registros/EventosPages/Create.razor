@@ -3,7 +3,10 @@
 @rendermode InteractiveServer
 @inject ActividadesService actividadesService
 @inject ClientesService clientesService
+@inject EventosService eventosService
 @inject NavigationManager navigation
+@inject AuthenticationStateProvider AuthStateProvider
+
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text
@@ -26,7 +29,7 @@
 @attribute [Authorize(Roles = "admin, cliente")]
 
 <PageTitle>Create</PageTitle>
-<div class="container" style="max-width: 900px;">
+<div class="container-lg">
     <div class="row mb-3">
         <div class="col md-5">
             <div>
@@ -48,61 +51,53 @@
             }
 
             <div class="container">
-
-                <EditForm Model="Input" OnValidSubmit="Guardar" FormName="CreateEventos">
+                <EditForm Model="@Input" OnValidSubmit="Guardar" FormName="CreateEventos">
                     <DataAnnotationsValidator />
 
                     <div class="row mb-3">
-                        <div class="col col-md-8">
+                        <div class="col">
                             <label><strong>Título</strong></label>
                             <InputText required class="form-control" @bind-Value="Input.Titulo" placeholder="Título" />
                         </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col col-md-8">
-                            <label><strong>Descripción</strong></label>
-                            <InputTextArea required class="form-control" @bind-Value="Input.Direccion" placeholder="Descripción" />
+                        <div class="col">
+                            <label><strong>Fecha de Inicio</strong></label>
+                            <InputDate required class="form-control" @bind-Value="Input.FechaInicio" />
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col col-md-8">
-                            <label><strong>Descripción</strong></label>
-                            <InputNumber required class="form-control" @bind-Value="Input.PrecioEntradaEvento" />
-                        </div>
-                    </div>
-
-                    <div style="width: 817px">
-                        <div class="row mb-3">
-                            <button @onclick="NavegarA" type="button" class="btn btn-secondary bi bi-arrow-left-circle">Volver</button>
-                        </div>
-                        <div class="row mb-3">
-                            <button type="submit" class="btn custom-button bi bi-floppy">Guardar</button>
-                        </div>
+                    <div class="mb-3">
+                        <label><strong>Nota</strong></label>
+                        <InputTextArea class="form-control" @bind-Value="Input.Nota" placeholder="Nota (opcional)" />
                     </div>
 
                     <div class="container mb-3">
                         <div class="border border-success p-3 mt-3">
                             <div>
-                                <h3 class="text-center"><strong>Detalle del evento</strong></h3>
+                                <h3 class="text-center mb-3"><strong>Detalle del evento</strong></h3>
                             </div>
 
                             <div class="row mb-3">
                                 <div class="col">
-                                    <label><strong>Dirección</strong></label>
-                                    <InputText required class="form-select" @bind-Value="Evento.Direccion" />
+                                    <label><strong>Actividades</strong></label>
+                                    <InputSelect required class="form-select" @bind-Value="Input.ActividadId">
+                                        <option selected disabled value="0">-- Selecciona --</option>
+                                        @foreach (var actividad in ListaActividades)
+                                        {
+                                            <option value="@actividad.ActividadId">Tipo: @actividad.TipoActividad -- Cupos: @actividad.Cupos -- Descripción: @actividad.Descripcion</option>
+                                        }
+                                    </InputSelect>
                                 </div>
-                            </div>
-
-                            <div class="row mb-3">
                                 <div class="col">
-                                    <label><strong>Precio Entrada Evento</strong></label>
-                                    <InputNumber required class="form-control" @bind-Value="Evento.PrecioEntradaEvento" />
+                                    <label><strong>Precio de entrada</strong></label>
+                                    <InputNumber required class="form-control" @bind-Value="Input.PrecioEntradaEvento" />
                                 </div>
-                                <div class="col d-flex justify-content-center">
+                                <div class="col">
+                                    <label><strong>Participantes</strong></label>
+                                    <InputNumber required class="form-control" @bind-Value="Input.Participantes" />
+                                </div>
+                                <div class="col d-flex justify-content-center align-content-center">
                                     <label><strong></strong></label>
-                                    <button type="button" @* @onclick="Agregar"*@  class="btn btn-outline-success">Agregar</button>
+                                    <button type="button" @onclick="Agregar" class="btn btn-outline-success">Agregar</button>
                                 </div>
                             </div>
                             @if (!string.IsNullOrEmpty(MensajeErrorDetalle))
@@ -115,10 +110,12 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Título</th>
-                                        <th>Dirección</th>
+                                        <th>Tipo de actividad</th>
+                                        <th>Participantes</th>
                                         <th>Hora Inicio</th>
                                         <th>Hora Fin</th>
+                                        <th>Participantes</th>
+                                        <th>Precio</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -128,19 +125,19 @@
                                         <tr>
                                             <td>@detalle.DetalleId</td>
                                             <td>@detalle.Actividad.TipoActividad</td>
-                                            <td>@detalle.Actividad.Participantes.ToString("N2")</td>
-                                            <td>@detalle.HoraInicio</td>
-                                            <td>@detalle.HoraFin</td>
+                                            <td>@detalle.Participantes</td>
+                                            <td>@detalle.Actividad.HoraInicio</td>
+                                            <td>@detalle.Actividad.HoraFin</td>
+                                            <td>@detalle.Participantes</td>
                                             <td>@detalle.Precio.ToString("N2")</td>
                                             <td>
-                                                <button type="button" class="btn btn-sm btn-outline-danger bi bi-trash3" @*@onclick="(() => RemoverDetalle(detalle))"*@>Remover</button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger bi bi-trash3" @onclick="(() => RemoverDetalle(detalle))">Remover</button>
                                             </td>
                                         </tr>
                                     }
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th></th>
@@ -155,12 +152,20 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
                                         <td>RD$@Evento.PrecioEntradaEvento.ToString("N2")</td>
                                         <td></td>
                                     </tr>
                                 </tfoot>
                             </table>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="row mb-3">
+                            <button @onclick="NavegarA" type="button" class="btn btn-secondary bi bi-arrow-left-circle">Volver</button>
+                        </div>
+                        <div class="row mb-3">
+                            <button type="submit" class="btn custom-button bi bi-floppy">Guardar</button>
                         </div>
                     </div>
                 </EditForm>
@@ -171,13 +176,13 @@
 
 <style>
     .custom-button {
-        background-color: #bf1ff0;
-        color: white;
+    background-color: #bf1ff0;
+    color: white;
     }
 
-        .custom-button:hover {
-            background-color: #9e1ac7; /* versión más oscura */
-        }
+    .custom-button:hover {
+    background-color: #9e1ac7; /* versión más oscura */
+    }
 </style>
 
 @code {
@@ -190,6 +195,7 @@
     public string? MensajeErrorDetalle { get; set; } = string.Empty;
     public Eventos Evento { get; set; } = new();
     public Clientes Cliente { get; set; } = new();
+    public List<Actividades> ListaActividades { get; set; } = new();
     public ApplicationUser User { get; set; }
 
     [Parameter]
@@ -202,55 +208,120 @@
     protected override async Task OnInitializedAsync()
     {
         Cliente = await clientesService.Buscar(ClienteID);
-        User = await UserManager.FindByIdAsync(Cliente.UsuarioId);
+        User = await UserManager.FindByIdAsync(UserID);
+        ListaActividades = await actividadesService.Listar(x => x.IdCliente == ClienteID);
     }
 
     public async Task Guardar()
     {
-        if (string.IsNullOrEmpty(Input.Titulo) || Input.HoraFin == default || Input.HoraInicio == default || Input.Direccion == null)
+        if (string.IsNullOrEmpty(Input.Titulo) ||
+            Input.Direccion == null ||
+            Input.PrecioEntradaEvento <= 0)
         {
             MensajeError = "Complete los campos requeridos";
             return;
         }
 
-        // Evento.TituloEvento = Input.Titulo;
-        // Evento = Input.;
-        // Evento.Descripcion = Input.Descripcion;
-        // Evento.Participantes = Input.Participantes;
-        // Evento.IdCliente = ClienteID;
+        if (Input.FechaInicio == default)
+        {
+            MensajeError = "Por favor, indique una fecha valida";
+            return;
+        }
+
+        Evento.TituloEvento = Input.Titulo;
+        Evento.Direccion = Input.Direccion;
+        Evento.Nota = Input.Nota;
+        Evento.FechaInicio = Input.FechaInicio;
+        Evento.PrecioEntradaEvento = Input.PrecioEntradaEvento;
 
         // await actividadesService.Guardar(Evento);
-        NavigationManager.NavigateTo($"/Actividades/Index/{ClienteID}/{UserID}");
+        NavigationManager.NavigateTo($"/Eventos/Index/{ClienteID}/{UserID}");
+    }
+
+    public async Task Agregar()
+    {
+        MensajeErrorDetalle = string.Empty;
+        if (Input.ActividadId <= 0)
+        {
+            MensajeErrorDetalle = "Seleccione una actividad";
+            return;
+        }
+        if (Input.Participantes <= 0)
+        {
+            MensajeErrorDetalle = "Indique la cantidad de participantes";
+            return;
+        }
+        if (Input.PrecioEntradaEvento <= 0)
+        {
+            MensajeErrorDetalle = "Indique el precio de entrada";
+            return;
+        }
+        var actividad = await actividadesService.Buscar(Input.ActividadId);
+        if (actividad == null)
+        {
+            MensajeErrorDetalle = "Actividad no encontrada";
+            return;
+        }
+
+        if (Evento.ListaDetalle.Any(x => x.ActividadId == actividad.ActividadId))
+        {
+            MensajeErrorDetalle = "Esta actividad ya fue agregada";
+            return;
+        }
+
+        Evento.ListaDetalle.Add(new EventosDetalle()
+            {
+                Actividad = actividad,
+                Precio = Input.PrecioEntradaEvento,
+                Participantes = Input.Participantes,
+                ActividadId = actividad.ActividadId,
+                EventoId = Evento.EventoId
+            });
+        Input.Participantes = 0;
+        Input.PrecioEntradaEvento = 0;
+        Input.ActividadId = 0;
+    }
+
+    public void RemoverDetalle(EventosDetalle detalle)
+    {
+        Evento.PrecioEntradaEvento -= detalle.Precio * detalle.Participantes;
+        Evento.ListaDetalle.Remove(detalle);
     }
 
     private sealed class InputModel
     {
         [Required]
-        [Display(Name = "Titulo")]
         public string Titulo { get; set; } = "";
 
-        [Required]
-        [Display(Name = "NombreCliente")]
-        public string NombreCliente { get; set; } = "";
+        public string Nota { get; set; } = "";
 
         [Required]
-        [Display(Name = "Direccion")]
         public string Direccion { get; set; } = "";
 
-        [Required]
-        [Display(Name = "Precio")]
-        public string PrecioEntradaEvento { get; set; } = "";
+        public double PrecioEntradaEvento { get; set; }
 
         [Required]
-        [Display(Name = "FechaInicio")]
         public DateTime FechaInicio { get; set; }
 
-        [Required]
-        [Display(Name = "HoraInicio")]
-        public TimeOnly HoraInicio { get; set; }
-        
-        [Required]
-        [Display(Name = "HoraFin")]
-        public TimeOnly HoraFin{ get; set; }
+        public int Participantes { get; set; }
+
+        public int ActividadId { get; set; }
     }
 }
+
+        @* var actividadesExistentes = await actividadesService.BuscarPorClienteId(ClienteID); 
+
+        foreach (var actividadExistente in actividadesExistentes)
+        {
+            var horaInicioExistente = actividadExistente.HoraInicio;
+            var horaFinExistente = actividadExistente.HoraFin;
+            var horaInicioNueva = Input.HoraInicio;
+            var horaFinNueva = Input.HoraFin;
+
+            if ((horaInicioNueva < horaFinExistente && horaFinNueva > horaInicioExistente) ||
+                (horaInicioExistente < horaFinNueva && horaFinExistente > horaInicioNueva))
+            {
+                MensajeError = "La actividad se solapa con una actividad existente.";
+                return;
+            }
+        } *@

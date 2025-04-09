@@ -45,6 +45,7 @@ public class EventosService(IDbContextFactory<ApplicationDbContext> DbFactory)
 	{
 		await using var contexto = await DbFactory.CreateDbContextAsync();
 		return await contexto.Eventos
+			.Include(x => x.Cliente)
 			.Include(x => x.ListaDetalle)
 			.AsNoTracking()
 			.Where(criterio)
@@ -54,10 +55,17 @@ public class EventosService(IDbContextFactory<ApplicationDbContext> DbFactory)
 	public async Task<Eventos?> Buscar(int id)
 	{
 		await using var contexto = await DbFactory.CreateDbContextAsync();
-		return await contexto.Eventos
+		var evento = await contexto.Eventos
 			.Include(x => x.ListaDetalle)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(c => c.EventoId == id);
+
+		if (evento != null && evento.ListaDetalle == null)
+		{
+			evento.ListaDetalle = new List<EventosDetalle>();
+		}
+
+		return evento;
 	}
 }
 

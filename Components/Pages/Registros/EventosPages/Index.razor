@@ -46,7 +46,7 @@
                     <option value="titulo">Título</option>
                     <AuthorizeView Roles="admin">
                         <Authorized>
-                            <option value="cliente">Clliente</option>
+                            <option value="cliente">Cliente</option>
                         </Authorized>
                     </AuthorizeView>
                     <option value="direccion">Dirección</option>
@@ -169,7 +169,7 @@
         ListaEventos = await eventosService.Listar(x => true);
     }
 
-    void NavegarA() { NavigationManager.NavigateTo($"/Actividades/Create/{ClienteID}/{UserID}"); }
+    void NavegarA() { NavigationManager.NavigateTo($"/Eventos/Create/{ClienteID}/{UserID}"); }
     void RegistroClientes() { NavigationManager.NavigateTo($"/Clientes/Index"); }
 
     public async Task Buscar()

@@ -68,6 +68,15 @@ public class ActividadesService(IDbContextFactory<ApplicationDbContext> DbFactor
 			.AsNoTracking()
 			.FirstOrDefaultAsync(c => c.ActividadId == id);
 	}
+
+	public async Task<List<Actividades>> BuscarPorClienteId(int id)
+	{
+		await using var contexto = await DbFactory.CreateDbContextAsync();
+		return await contexto.Actividades
+			.AsNoTracking()
+			.Where(c => c.IdCliente == id)
+			.ToListAsync();
+	}
 }
 
 

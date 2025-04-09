@@ -9,7 +9,8 @@ public class Actividades
 	public string TituloActividad { get; set; }
 	public string TipoActividad { get; set; }
 	public string Descripcion { get; set; }
-	public int Participantes { get; set; }
-	public double Precio { get; set; }
+	public TimeOnly HoraInicio { get; set; }
+	public TimeOnly HoraFin { get; set; }
 	public int IdCliente { get; set; }
+	public int Cupos { get; set; } = 100;
 }
