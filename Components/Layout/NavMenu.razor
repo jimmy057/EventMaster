@@ -1,18 +1,72 @@
 ﻿@implements IDisposable
 
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+@rendermode InteractiveServer
 
-<div>
-    <ul class="row mb-1" style="padding-right: 50px;">
-        <li class="col md-5"><a href="#">Home</a></li>
-        <li class="col md-5"><a href="#about">About</a></li>
-    </ul>
-</div>
+<nav class="navbar bg-body-tertiary" style="background-color: #f0f0f0 !important;">
+    <div class="container-fluid justify-content-between align-items-center">
+        <!-- IZQUIERDA -->
+        <div class="d-flex align-items-center">
+            <a href="/" class="me-3">
+                <h1 class="header-text" style="color: #bf1ff0;">EventMaster</h1>
+            </a>
+
+            <div class="d-flex">
+                <AuthorizeView Roles="admin">
+                    <Authorized>
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Registros
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/Clientes/Index">Clientes</a></li>
+                                <li><a class="dropdown-item" href="/Administradores/Index">Administradores</a></li>
+                            </ul>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
+
+                <AuthorizeView Roles="cliente">
+                    <Authorized>
+                        <div class="me-3">
+                            <a href="/Ver-Registros">Ver Registros</a>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
+        </div>
+
+        <!-- DERECHA -->
+        <div class="d-flex align-items-center">
+            <AuthorizeView>
+                <Authorized>
+                    <span class="me-3">¡Bienvenidos, @NombreUsuarioAutenticado!</span>
+                    <a class="me-3" href="/Account/Manage">Mi Cuenta</a>
+                    <form action="Account/Logout" method="post" class="d-inline">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                        <button type="submit" class="btn btn-link p-0" style="color: #bf1ff0;">Cerrar Sesión</button>
+                    </form>
+                </Authorized>
+                <NotAuthorized>
+                    <a class="me-3" style="color: #bf1ff0;" href="/Account/Login">Iniciar Sesión</a>
+                    <a style="color: #bf1ff0;" href="/Account/Register">Registrarse</a>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+    </div>
+</nav>
+
 @code {
     private string? currentUrl;
+    public string? NombreUsuarioAutenticado { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var userAutenticado = authState.User;
+        NombreUsuarioAutenticado = userAutenticado.Identity.Name;
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
     }
