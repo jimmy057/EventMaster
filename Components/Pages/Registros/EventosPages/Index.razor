@@ -91,7 +91,6 @@
                             </Authorized>
                         </AuthorizeView>
                         <th>Dirección</th>
-                        @* <th>Cupos</th> *@
                         <th>Fecha</th>
                         <th>Estado</th>
                         <th>Acciones</th>
@@ -105,20 +104,18 @@
                             <tr>
                                 <td>@evento.EventoId</td>
                                 <td>@evento.TituloEvento</td>
-                                <AuthorizeView>
+                                <AuthorizeView Roles="admin">
                                     <Authorized>
-                                        <td>@Cliente.Nombre @Cliente.Apellido</td>
+                                        <td>@Cliente.Nombre</td>
                                     </Authorized>
                                 </AuthorizeView>
                                 <td>@evento.Direccion</td>
-                                @* <td>@evento.Cupos</td> *@
                                 <td>@evento.FechaInicio.ToString("dd/MM/yyyy")</td>
                                 <td>@evento.EstadoEvento</td>
                                 <td>
                                     <div class="dropdown">
                                         <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Acción</a>
                                         <div class="dropdown-menu">
-                                            <a href="/Eventos/View/@ClienteID/@UserID/@evento.EventoId" class="dropdown-item">Ver</a>
                                             <a href="/Eventos/Edit/@ClienteID/@UserID/@evento.EventoId" class="dropdown-item">Editar</a>
                                             <a href="/Eventos/Delete/@ClienteID/@UserID/@evento.EventoId" class="dropdown-item">Eliminar</a>
                                         </div>
