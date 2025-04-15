@@ -4,6 +4,7 @@
 @inject ActividadesService actividadesService
 @inject ClientesService clientesService
 @inject EventosService eventosService
+@inject EventosDetalleService eventosDetalleService
 @inject NavigationManager navigation
 @inject AuthenticationStateProvider AuthStateProvider
 
@@ -43,13 +44,6 @@
             <h3 class="text-center"><strong>Create</strong></h3>
         </div>
         <div class="card-body">
-            @if (!string.IsNullOrEmpty(MensajeError))
-            {
-                <div class="alert alert-danger" role="alert">
-                    @MensajeError
-                </div>
-            }
-
             <div class="container">
                 <EditForm Model="@Input" OnValidSubmit="Guardar" FormName="CreateEventos">
                     <DataAnnotationsValidator />
@@ -66,9 +60,21 @@
                     </div>
 
                     <div class="mb-3">
+                        <label><strong>Dirección</strong></label>
+                        <InputText required class="form-control" @bind-Value="Input.Direccion" placeholder="Dirección" />
+                    </div>
+
+                    <div class="mb-3">
                         <label><strong>Nota</strong></label>
                         <InputTextArea class="form-control" @bind-Value="Input.Nota" placeholder="Nota (opcional)" />
                     </div>
+
+                    @if (!string.IsNullOrEmpty(MensajeError))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @MensajeError
+                        </div>
+                    }
 
                     <div class="container mb-3">
                         <div class="border border-success p-3 mt-3">
@@ -80,7 +86,7 @@
                                 <div class="col">
                                     <label><strong>Actividades</strong></label>
                                     <InputSelect required class="form-select" @bind-Value="Input.ActividadId">
-                                        <option selected disabled value="0">-- Selecciona --</option>
+                                        <option selected value="0">-- Selecciona --</option>
                                         @foreach (var actividad in ListaActividades)
                                         {
                                             <option value="@actividad.ActividadId">Tipo: @actividad.TipoActividad -- Cupos: @actividad.Cupos -- Descripción: @actividad.Descripcion</option>
@@ -96,8 +102,8 @@
                                     <InputNumber required class="form-control" @bind-Value="Input.Participantes" />
                                 </div>
                                 <div class="col d-flex justify-content-center align-content-center">
-                                    <label><strong></strong></label>
-                                    <button type="button" @onclick="Agregar" class="btn btn-outline-success">Agregar</button>
+                                    <button type="button" @onclick="Limpiar" class="btn btn-secondary bi bi-arrow-counterclockwise m-4">  Limpiar</button>
+                                    <button type="button" @onclick="Agregar" class="btn btn-success bi bi-plus-circle m-4">  Agregar</button>
                                 </div>
                             </div>
                             @if (!string.IsNullOrEmpty(MensajeErrorDetalle))
@@ -111,11 +117,11 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Tipo de actividad</th>
-                                        <th>Participantes</th>
                                         <th>Hora Inicio</th>
                                         <th>Hora Fin</th>
                                         <th>Participantes</th>
                                         <th>Precio</th>
+                                        <th>Sub-total</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -123,15 +129,15 @@
                                     @foreach (var detalle in Evento.ListaDetalle)
                                     {
                                         <tr>
-                                            <td>@detalle.DetalleId</td>
-                                            <td>@detalle.Actividad.TipoActividad</td>
-                                            <td>@detalle.Participantes</td>
-                                            <td>@detalle.Actividad.HoraInicio</td>
-                                            <td>@detalle.Actividad.HoraFin</td>
+                                            <td>@detalle.ActividadId</td>
+                                            <td>@detalle.TipoActividad</td>
+                                            <td>@detalle.HoraInicio</td>
+                                            <td>@detalle.HoraFin</td>
                                             <td>@detalle.Participantes</td>
                                             <td>@detalle.Precio.ToString("N2")</td>
+                                            <td>@((detalle.Participantes * detalle.Precio).ToString("N2"))</td>
                                             <td>
-                                                <button type="button" class="btn btn-sm btn-outline-danger bi bi-trash3" @onclick="(() => RemoverDetalle(detalle))">Remover</button>
+                                                <button type="button" class="btn btn-sm btn-danger bi bi-trash3" @onclick="(() => RemoverDetalle(detalle))">Remover</button>
                                             </td>
                                         </tr>
                                     }
@@ -143,10 +149,12 @@
                                         <th></th>
                                         <th></th>
                                         <th></th>
+                                        <th></th>
                                         <th>Total</th>
                                         <th></th>
                                     </tr>
                                     <tr>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -176,13 +184,13 @@
 
 <style>
     .custom-button {
-    background-color: #bf1ff0;
-    color: white;
+        background-color: #bf1ff0;
+        color: white;
     }
 
-    .custom-button:hover {
-    background-color: #9e1ac7; /* versión más oscura */
-    }
+        .custom-button:hover {
+            background-color: #9e1ac7; /* versión más oscura */
+        }
 </style>
 
 @code {
@@ -214,9 +222,14 @@
 
     public async Task Guardar()
     {
+        if (Evento.ListaDetalle.Count == 0)
+        {
+            MensajeError = "El evento debe tener detalle";
+            return;
+        }
+
         if (string.IsNullOrEmpty(Input.Titulo) ||
-            Input.Direccion == null ||
-            Input.PrecioEntradaEvento <= 0)
+            Input.Direccion == null)
         {
             MensajeError = "Complete los campos requeridos";
             return;
@@ -228,14 +241,29 @@
             return;
         }
 
+        var idsActividadesEnDetalle = new List<int>();
+        foreach (var detalle in Evento.ListaDetalle)
+            idsActividadesEnDetalle.Add(detalle.ActividadId);
+        var listaDetalles = Evento.ListaDetalle;
+
+        Evento.ClienteId = ClienteID;
         Evento.TituloEvento = Input.Titulo;
         Evento.Direccion = Input.Direccion;
         Evento.Nota = Input.Nota;
         Evento.FechaInicio = Input.FechaInicio;
         Evento.PrecioEntradaEvento = Input.PrecioEntradaEvento;
 
-        // await actividadesService.Guardar(Evento);
+        await actividadesService.AfectarCupos(idsActividadesEnDetalle.ToArray(), idsActividadesEnDetalle.ToArray(), Evento, true);
+        await eventosService.Guardar(Evento);
+
         NavigationManager.NavigateTo($"/Eventos/Index/{ClienteID}/{UserID}");
+    }
+
+    public void Limpiar()
+    {
+        Input.ActividadId = 0;
+        Input.PrecioEntradaEvento = 0;
+        Input.Participantes = 0;
     }
 
     public async Task Agregar()
@@ -269,14 +297,24 @@
             return;
         }
 
+        if (Input.Participantes > actividad.Cupos)
+        {
+            MensajeErrorDetalle = "No hay suficientes cupos para esta actividad";
+            return;
+        }
+
         Evento.ListaDetalle.Add(new EventosDetalle()
             {
-                Actividad = actividad,
                 Precio = Input.PrecioEntradaEvento,
                 Participantes = Input.Participantes,
                 ActividadId = actividad.ActividadId,
-                EventoId = Evento.EventoId
+                EventoId = Evento.EventoId,
+                TipoActividad = actividad.TipoActividad,
+                HoraInicio = actividad.HoraInicio,
+                HoraFin = actividad.HoraFin
             });
+
+        Evento.PrecioEntradaEvento += Input.Participantes * Input.PrecioEntradaEvento;
         Input.Participantes = 0;
         Input.PrecioEntradaEvento = 0;
         Input.ActividadId = 0;
@@ -285,6 +323,9 @@
     public void RemoverDetalle(EventosDetalle detalle)
     {
         Evento.PrecioEntradaEvento -= detalle.Precio * detalle.Participantes;
+        Input.ActividadId = detalle.ActividadId;
+        Input.Participantes = detalle.Participantes;
+        Input.PrecioEntradaEvento = detalle.Precio;
         Evento.ListaDetalle.Remove(detalle);
     }
 
@@ -293,7 +334,7 @@
         [Required]
         public string Titulo { get; set; } = "";
 
-        public string Nota { get; set; } = "";
+        public string? Nota { get; set; } = null;
 
         [Required]
         public string Direccion { get; set; } = "";
@@ -306,6 +347,12 @@
         public int Participantes { get; set; }
 
         public int ActividadId { get; set; }
+
+        public string TipoActividad { get; set; } = "";
+
+        public TimeOnly HoraInicio { get; set; }
+
+        public TimeOnly HoraFin { get; set; }
     }
 }
 
