@@ -30,7 +30,7 @@ builder.Services.AddScoped<AdministradoresService>();
 builder.Services.AddScoped<ActividadesService>();
 builder.Services.AddScoped<EventosService>();
 builder.Services.AddScoped<EventosDetalleService>();
-builder.Services.AddScoped<UsuariosService>();
+builder.Services.AddScoped<EventMaster.Services.UsuariosService>();
 
 // Configuración de Identity con Roles
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
