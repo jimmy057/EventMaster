@@ -354,16 +354,30 @@
 
         if (user.IsInRole("admin"))
         {
-            ListaClientes = await clientesService.Listar(x => true);
-            ListaActividades = await actividadesService.Listar(x => true);
-            ListaEventos = await eventosService.Listar(x => true);
+            try
+            {
+                ListaClientes = await clientesService.Listar(x => true);
+                ListaActividades = await actividadesService.Listar(x => true);
+                ListaEventos = await eventosService.Listar(x => true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Todavia no hay actividades, eventos o clientes: {e.Message}");
+            }
         }
 
         if (user.IsInRole("cliente"))
         {
             Cliente = await usuariosService.BuscarClientePorUserId(userId);
-            ListaActividades = await actividadesService.Listar(x => x.IdCliente == Cliente.ClienteId);
-            ListaEventos = await eventosService.Listar(x => x.ClienteId == Cliente.ClienteId);
+            try
+            {
+                ListaActividades = await actividadesService.Listar(x => x.IdCliente == Cliente.ClienteId);
+                ListaEventos = await eventosService.Listar(x => x.ClienteId == Cliente.ClienteId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Todavia no hay actividades o eventos: {e.Message}");
+            }
         }
     }
 
