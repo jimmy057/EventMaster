@@ -267,10 +267,12 @@
         Evento.Nota = Input.Nota;
         Evento.FechaInicio = Input.FechaInicio;
 
+
         var idsActividadesEnDetalle = new List<int>();
         foreach (var detalle in Evento.ListaDetalle)
         {
             idsActividadesEnDetalle.Add(detalle.ActividadId);
+            Evento.PrecioEntradaEvento += detalle.Precio;
         }
 
         var actividadesEliminadas = DetallesOriginales
