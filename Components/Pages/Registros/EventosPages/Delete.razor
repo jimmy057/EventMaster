@@ -1,0 +1,246 @@
+﻿@page "/Eventos/Delete/{ClienteID:int}/{UserID}/{EventoID:int}"
+
+@rendermode InteractiveServer
+@inject ActividadesService actividadesService
+@inject ClientesService clientesService
+@inject EventosService eventosService
+@inject EventosDetalleService eventosDetalleService
+@inject NavigationManager navigation
+@inject AuthenticationStateProvider AuthStateProvider
+
+
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using EventMaster.Components.Account
+@using EventMaster.Components.Account.Pages
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using EventMaster.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject ILogger<Register> Logger
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject RoleManager<IdentityRole> RoleManager
+
+@attribute [Authorize(Roles = "admin, cliente")]
+
+<PageTitle>Delete</PageTitle>
+<div class="container-lg">
+    <div class="row mb-3">
+        <div class="col md-5">
+            <div>
+                <h3>Registro de <strong>Eventos</strong></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h3 class="text-center"><strong>Delete</strong></h3>
+        </div>
+        <div class="card-body">
+            <div class="container">
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label><strong>Título</strong></label>
+                        <InputText required disabled class="form-control" @bind-Value="Input.Titulo" placeholder="Título" />
+                    </div>
+                    <div class="col">
+                        <label><strong>Fecha de Inicio</strong></label>
+                        <InputDate required disabled class="form-control" @bind-Value="Input.FechaInicio" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Dirección</strong></label>
+                    <InputText required disabled class="form-control" @bind-Value="Input.Direccion" placeholder="Dirección" />
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Nota</strong></label>
+                    <InputTextArea disabled class="form-control" @bind-Value="Input.Nota" placeholder="Nota (opcional)" />
+                </div>
+
+                <div class="container mb-3">
+                    <div class="border border-success p-3 mt-3">
+                        <div>
+                            <h3 class="text-center mb-3"><strong>Detalle del evento</strong></h3>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label><strong>Actividades</strong></label>
+                                <InputSelect disabled required class="form-select" @bind-Value="Input.ActividadId">
+                                    <option selected value="0">-- Selecciona --</option>
+                                    @foreach (var actividad in ListaActividades)
+                                    {
+                                        <option value="@actividad.ActividadId">Tipo: @actividad.TipoActividad -- Cupos: @actividad.Cupos -- Descripción: @actividad.Descripcion</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                            <div class="col">
+                                <label><strong>Precio de entrada</strong></label>
+                                <InputNumber disabled required class="form-control" @bind-Value="Input.PrecioEntradaEvento" />
+                            </div>
+                            <div class="col">
+                                <label><strong>Participantes</strong></label>
+                                <InputNumber disabled required class="form-control" @bind-Value="Input.Participantes" />
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(MensajeErrorDetalle))
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                @MensajeErrorDetalle
+                            </div>
+                        }
+                        <table class="table table-sm table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tipo de actividad</th>
+                                    <th>Hora Inicio</th>
+                                    <th>Hora Fin</th>
+                                    <th>Participantes</th>
+                                    <th>Precio</th>
+                                    <th>Sub-total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var detalle in Evento.ListaDetalle)
+                                {
+                                    <tr>
+                                        <td>@detalle.ActividadId</td>
+                                        <td>@detalle.TipoActividad</td>
+                                        <td>@detalle.HoraInicio</td>
+                                        <td>@detalle.HoraFin</td>
+                                        <td>@detalle.Participantes</td>
+                                        <td>@detalle.Precio.ToString("N2")</td>
+                                        <td>@((detalle.Participantes * detalle.Precio).ToString("N2"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>RD$@Evento.PrecioEntradaEvento.ToString("N2")</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="row mb-3">
+                        <button @onclick="NavegarA" type="button" class="btn btn-secondary bi bi-arrow-left-circle">Volver</button>
+                    </div>
+                    <div class="row mb-3">
+                        <button type="button" @onclick="Eliminar" class="btn btn-danger bi bi-trash3">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private IEnumerable<IdentityError>? identityErrors;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    public string? MensajeError { get; set; } = string.Empty;
+    public string? MensajeErrorDetalle { get; set; } = string.Empty;
+    public Eventos Evento { get; set; } = new();
+    public Clientes Cliente { get; set; } = new();
+    public List<Actividades> ListaActividades { get; set; } = new();
+    public List<EventosDetalle> DetallesOriginales { get; set; } = new();
+    public ApplicationUser User { get; set; }
+
+    [Parameter]
+    public int ClienteID { get; set; }
+    [Parameter]
+    public string UserID { get; set; }
+    [Parameter]
+    public int EventoID { get; set; }
+
+    void NavegarA() { NavigationManager.NavigateTo($"/Eventos/Index/{ClienteID}/{UserID}"); }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cliente = await clientesService.Buscar(ClienteID);
+        User = await UserManager.FindByIdAsync(UserID);
+        ListaActividades = await actividadesService.Listar(x => x.IdCliente == ClienteID);
+        Evento = await eventosService.Buscar(EventoID);
+        Input.Titulo = Evento.TituloEvento;
+        Input.Direccion = Evento.Direccion;
+        Input.Nota = Evento.Nota;
+        Input.FechaInicio = Evento.FechaInicio;
+        DetallesOriginales = Evento.ListaDetalle
+        .Select(d => new EventosDetalle
+            {
+                ActividadId = d.ActividadId,
+                Precio = d.Precio,
+            }).ToList();
+    }
+
+    public async Task Eliminar()
+    {
+        try
+        {
+            await eventosService.Eliminar(EventoID);
+            NavegarA();
+        }
+        catch (Exception ex)
+        {
+            MensajeError = $"Error al eliminar el evento: {ex.Message}";
+        }
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        public string Titulo { get; set; } = "";
+
+        public string? Nota { get; set; } = null;
+
+        [Required]
+        public string Direccion { get; set; } = "";
+
+        public double PrecioEntradaEvento { get; set; }
+
+        [Required]
+        public DateTime FechaInicio { get; set; }
+
+        public int Participantes { get; set; }
+
+        public int ActividadId { get; set; }
+
+        public string TipoActividad { get; set; } = "";
+
+        public TimeOnly HoraInicio { get; set; }
+
+        public TimeOnly HoraFin { get; set; }
+    }
+}
