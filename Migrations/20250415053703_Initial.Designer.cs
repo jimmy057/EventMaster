@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventMaster.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250407204859_AgregandoCampoParticipantes")]
-    partial class AgregandoCampoParticipantes
+    [Migration("20250415053703_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,22 +98,25 @@ namespace EventMaster.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ActividadId"));
 
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IdCliente")
+                    b.Property<int?>("Cupos")
                         .HasColumnType("int");
 
-                    b.Property<int>("Participantes")
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeOnly>("HoraFin")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("HoraInicio")
+                        .HasColumnType("time");
+
+                    b.Property<int?>("IdCliente")
                         .HasColumnType("int");
 
                     b.Property<string>("TipoActividad")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TituloActividad")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ActividadId");
@@ -185,9 +188,6 @@ namespace EventMaster.Migrations
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Cupos")
-                        .HasColumnType("int");
-
                     b.Property<string>("Direccion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -196,7 +196,6 @@ namespace EventMaster.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nota")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("PrecioEntradaEvento")
@@ -232,6 +231,16 @@ namespace EventMaster.Migrations
 
                     b.Property<TimeOnly>("HoraInicio")
                         .HasColumnType("time");
+
+                    b.Property<int>("Participantes")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Precio")
+                        .HasColumnType("float");
+
+                    b.Property<string>("TipoActividad")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DetalleId");
 

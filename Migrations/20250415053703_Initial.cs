@@ -6,11 +6,30 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EventMaster.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateIdentitySchema : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Actividades",
+                columns: table => new
+                {
+                    ActividadId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TituloActividad = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TipoActividad = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HoraInicio = table.Column<TimeOnly>(type: "time", nullable: false),
+                    HoraFin = table.Column<TimeOnly>(type: "time", nullable: false),
+                    IdCliente = table.Column<int>(type: "int", nullable: true),
+                    Cupos = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Actividades", x => x.ActividadId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -67,6 +86,27 @@ namespace EventMaster.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Administradores",
+                columns: table => new
+                {
+                    AdminId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    NombreUsuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Administradores", x => x.AdminId);
+                    table.ForeignKey(
+                        name: "FK_Administradores_AspNetUsers_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -156,6 +196,87 @@ namespace EventMaster.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Clientes",
+                columns: table => new
+                {
+                    ClienteId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clientes", x => x.ClienteId);
+                    table.ForeignKey(
+                        name: "FK_Clientes_AspNetUsers_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Eventos",
+                columns: table => new
+                {
+                    EventoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClienteId = table.Column<int>(type: "int", nullable: false),
+                    TituloEvento = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Direccion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PrecioEntradaEvento = table.Column<double>(type: "float", nullable: false),
+                    FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Nota = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Eventos", x => x.EventoId);
+                    table.ForeignKey(
+                        name: "FK_Eventos_Clientes_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Clientes",
+                        principalColumn: "ClienteId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventosDetalle",
+                columns: table => new
+                {
+                    DetalleId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EventoId = table.Column<int>(type: "int", nullable: false),
+                    ActividadId = table.Column<int>(type: "int", nullable: false),
+                    Participantes = table.Column<int>(type: "int", nullable: false),
+                    Precio = table.Column<double>(type: "float", nullable: false),
+                    TipoActividad = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HoraInicio = table.Column<TimeOnly>(type: "time", nullable: false),
+                    HoraFin = table.Column<TimeOnly>(type: "time", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventosDetalle", x => x.DetalleId);
+                    table.ForeignKey(
+                        name: "FK_EventosDetalle_Actividades_ActividadId",
+                        column: x => x.ActividadId,
+                        principalTable: "Actividades",
+                        principalColumn: "ActividadId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventosDetalle_Eventos_EventoId",
+                        column: x => x.EventoId,
+                        principalTable: "Eventos",
+                        principalColumn: "EventoId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Administradores_UsuarioId",
+                table: "Administradores",
+                column: "UsuarioId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -194,11 +315,34 @@ namespace EventMaster.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clientes_UsuarioId",
+                table: "Clientes",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Eventos_ClienteId",
+                table: "Eventos",
+                column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventosDetalle_ActividadId",
+                table: "EventosDetalle",
+                column: "ActividadId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventosDetalle_EventoId",
+                table: "EventosDetalle",
+                column: "EventoId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Administradores");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -215,7 +359,19 @@ namespace EventMaster.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "EventosDetalle");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Actividades");
+
+            migrationBuilder.DropTable(
+                name: "Eventos");
+
+            migrationBuilder.DropTable(
+                name: "Clientes");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
