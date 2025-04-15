@@ -1,4 +1,13 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
+@using Microsoft.AspNetCore.WebUtilities
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Encodings.Web
+@using System.Text
+@using Microsoft.Extensions.Logging
+@using EventMaster.Models
+
 @inject NavigationManager NavigationManager
 @inject ClientesService clientesService
 @inject UsuariosService usuariosService
@@ -6,6 +15,11 @@
 @inject EventosService eventosService
 @inject AdministradoresService administradoresService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject RoleManager<IdentityRole> RoleManager
+@inject ILogger<Home> Logger
+
 
 <PageTitle>Home</PageTitle>
 
@@ -259,11 +273,34 @@
     private List<Actividades> ListaActividades { get; set; } = new();
     private List<Eventos> ListaEventos { get; set; } = new();
     private Clientes Cliente { get; set; } = new();
+    private IEnumerable<IdentityError>? identityErrors;
 
     private void IrAClientes() => NavigationManager.NavigateTo("/Clientes/Index");
     private void irAdmin() => NavigationManager.NavigateTo("/Administradores/Index");
     private void IrEventos() => NavigationManager.NavigateTo($"/Eventos/Index/{Cliente.ClienteId}/{Cliente.UsuarioId}");
     private void IrActividades() => NavigationManager.NavigateTo($"/Actividades/Index/{Cliente.ClienteId}/{Cliente.UsuarioId}");
+
+    private ApplicationUser CreateUser()
+    {
+        try
+        {
+            return Activator.CreateInstance<ApplicationUser>();
+        }
+        catch
+        {
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+        }
+    }
+
+    private IUserEmailStore<ApplicationUser> GetEmailStore()
+    {
+        if (!UserManager.SupportsUserEmail)
+        {
+            throw new NotSupportedException("The default UI requires a user store with email support.");
+        }
+        return (IUserEmailStore<ApplicationUser>)UserStore;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -271,13 +308,57 @@
         var user = authenticationState.User;
         var userId = user.FindFirst(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 
+        ListaAdmins = await administradoresService.Listar(x => true);
+
+        if ((ListaAdmins.Count == 0))
+        {
+            var userAdmin = CreateUser();
+
+            await UserStore.SetUserNameAsync(userAdmin, "Admin", CancellationToken.None);
+            var emailStore = GetEmailStore();
+            await emailStore.SetEmailAsync(userAdmin, "Admin@prueba.com", CancellationToken.None);
+            await UserManager.SetPhoneNumberAsync(userAdmin, string.Empty);
+            userAdmin.PasswordHash = "Contraseña123@";
+            userAdmin.EmailConfirmed = true;
+            var result = await UserStore.CreateAsync(userAdmin, CancellationToken.None);
+
+            if (!result.Succeeded)
+            {
+                identityErrors = result.Errors;
+                await UserManager.DeleteAsync(userAdmin);
+                return;
+            }
+
+            var rol = "admin";
+            if (!await RoleManager.RoleExistsAsync(rol))
+                await RoleManager.CreateAsync(new IdentityRole(rol));
+
+            await UserManager.AddToRoleAsync(userAdmin, rol);
+
+            if (!result.Succeeded)
+            {
+                await UserManager.DeleteAsync(userAdmin);
+                return;
+            }
+
+            Logger.LogInformation("El usuario con rol de admin se ha creado exitosamente.");
+
+            Administradores admin = new();
+            admin.UsuarioId = userAdmin.Id;
+            admin.NombreUsuario = userAdmin.UserName;
+            admin.FechaCreacion = DateTime.Now;
+
+            if (!await administradoresService.Guardar(admin))
+                await UserManager.DeleteAsync(userAdmin);
+        }
+
         if (user.IsInRole("admin"))
         {
-            ListaAdmins = await administradoresService.Listar(x => true);
             ListaClientes = await clientesService.Listar(x => true);
             ListaActividades = await actividadesService.Listar(x => true);
             ListaEventos = await eventosService.Listar(x => true);
         }
+
         if (user.IsInRole("cliente"))
         {
             Cliente = await usuariosService.BuscarClientePorUserId(userId);
@@ -285,4 +366,6 @@
             ListaEventos = await eventosService.Listar(x => x.ClienteId == Cliente.ClienteId);
         }
     }
+
+
 }
