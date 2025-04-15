@@ -184,13 +184,13 @@
 
 <style>
     .custom-button {
-        background-color: #bf1ff0;
-        color: white;
+    background-color: #bf1ff0;
+    color: white;
     }
 
-        .custom-button:hover {
-            background-color: #9e1ac7; /* versión más oscura */
-        }
+    .custom-button:hover {
+    background-color: #9e1ac7; /* versión más oscura */
+    }
 </style>
 
 @code {
@@ -243,7 +243,9 @@
 
         var idsActividadesEnDetalle = new List<int>();
         foreach (var detalle in Evento.ListaDetalle)
+        {
             idsActividadesEnDetalle.Add(detalle.ActividadId);
+        }
         var listaDetalles = Evento.ListaDetalle;
 
         Evento.ClienteId = ClienteID;
@@ -251,7 +253,7 @@
         Evento.Direccion = Input.Direccion;
         Evento.Nota = Input.Nota;
         Evento.FechaInicio = Input.FechaInicio;
-        Evento.PrecioEntradaEvento = Input.PrecioEntradaEvento;
+        Evento.PrecioEntradaEvento = Evento.PrecioEntradaEvento;
 
         await actividadesService.AfectarCupos(idsActividadesEnDetalle.ToArray(), idsActividadesEnDetalle.ToArray(), Evento, true);
         await eventosService.Guardar(Evento);
