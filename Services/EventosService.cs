@@ -10,7 +10,7 @@ public class EventosService(IDbContextFactory<ApplicationDbContext> DbFactory)
 	public async Task<bool> Existe(int id)
 	{
 		await using var contexto = await DbFactory.CreateDbContextAsync();
-		return await contexto.Administradores.AnyAsync(c => c.AdminId == id);
+		return await contexto.Eventos.AnyAsync(c => c.EventoId == id);
 	}
 	private async Task<bool> Insertar(Eventos evento)
 	{

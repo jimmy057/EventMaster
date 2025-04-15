@@ -44,6 +44,7 @@
                     <option value="idactividad">ID</option>
                     <option value="titulo">Título</option>
                     <option value="tipo">Tipo de Actividad</option>
+                    <option value="participantes">Participantes</option>
                 </InputSelect>
                 @*btn restablecer*@
                 <button type="button" class="btn btn-sm btn-secondary bi bi-arrow-counterclockwise" @onclick="() => Restablecer()">Restablecer</button>
@@ -79,6 +80,8 @@
                         <th>Título</th>
                         <th>Tipo de Actividad</th>
                         <th>Descripción</th>
+                        <th>Hora inicio</th>
+                        <th>Hora fin</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -92,6 +95,8 @@
                                 <td>@actividad.TituloActividad</td>
                                 <td>@actividad.TipoActividad</td>
                                 <td>@actividad.Descripcion</td>
+                                <td>@actividad.HoraInicio</td>
+                                <td>@actividad.HoraFin</td>
                                 <td>
                                     <div class="dropdown">
                                         <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Acción</a>
@@ -144,7 +149,17 @@
         userAutenticado = authState.User;
         Cliente = await clientesService.Buscar(ClienteID);
         User = await UserManager.FindByIdAsync(UserID);
-        ListaActividades = await actividadesService.Listar(x => true);
+        if (userAutenticado.IsInRole("cliente"))
+        {
+            var idActual = (await UserManager.GetUserAsync(userAutenticado))?.Id;
+
+            if (idActual != UserID)
+            {
+                NavigationManager.NavigateTo("/AccessDenied", forceLoad: true);
+                return;
+            }
+        }
+        ListaActividades = await actividadesService.Listar(x => x.IdCliente == ClienteID);
     }
 
     void NavegarA() { NavigationManager.NavigateTo($"/Actividades/Create/{ClienteID}/{UserID}"); }
@@ -168,8 +183,7 @@
                 {
                     Filtro.MensajeError = "Debe escribir un ID valido";
                     return;
-                }
-                if (!Filtro.CriterioBusqueda.All(char.IsDigit))
+                }                if (!Filtro.CriterioBusqueda.All(char.IsDigit))
                 {
                     Filtro.MensajeError = "Debe escribir un ID valido";
                     return;

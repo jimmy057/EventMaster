@@ -5,71 +5,11 @@
 
 <div class="page">
     <main>
-        <div class="top-row d-flex justify-content-between">
-            <div class="col">
-                <div class="row pt-2">
-                    <div class="col-auto">
-                        <a href="/">
-                            <h1 class="header-text" style="color: #bf1ff0;">EventMaster</h1>
-                        </a>
-                    </div>
-                    <AuthorizeView Roles="admin">
-                        <Authorized>
-                            <div class="col-auto" style="margin-left: 5px; padding-top: 10px">
-                                <div class="dropdown">
-                                    <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Registros</a>
-                                    <div class="dropdown-menu">
-                                        <a href="/Clientes/Index" class="dropdown-item">Clientes</a>
-                                        <a href="/Administradores/Index" class="dropdown-item">Administradores</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </Authorized>
-                    </AuthorizeView>
-                    <AuthorizeView Roles="cliente">
-                        <Authorized>
-                            <div class="col-auto" style="margin-left: 5px; padding-top: 10px">
-                                <a href="/Ver-Registros">Ver Registros</a>
-                            </div>
-                        </Authorized>
-                    </AuthorizeView>
-                </div>
-            </div>
-
-
-
-
-
-            <AuthorizeView>
-                <Authorized>
-                    <div class="d-flex justify-content-end" style="padding-right: 50px">
-                        <span>Bienvenidx, @NombreUsuarioAutenticado!</span>
-                        <a style="padding-right: 10px" href="/Account/Manage">Mi Cuenta</a>
-                        <span>
-                            <form action="Account/Logout" method="post">
-                                <AntiforgeryToken />
-                                <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                                <button style="color: #bf1ff0;" type="submit" class="dropdown-item">Cerrar Sesi&oacute;n</button>
-                            </form>
-                        </span>
-                    </div>
-                </Authorized>
-                <NotAuthorized>
-                    <div class="pt-3" style="padding-right: 50px">
-                        <div class="row">
-                            <div class="col">
-                                <a style="color: #bf1ff0;" href="/Account/Login">Iniciar Sesión</a>
-                            </div>
-                            <div class="col">
-                                <a style="color: #bf1ff0;" href="/Account/Register">Registrarse</a>
-                            </div>
-                        </div>
-                    </div>
-                </NotAuthorized>
-            </AuthorizeView>
+        <div>
+            <NavMenu/>
         </div>
 
-        <article class="content px-4">
+        <article>
             @Body
         </article>
     </main>
@@ -83,7 +23,7 @@
 
 @code {
     private string? currentUrl;
-    public string? NombreUsuarioAutenticado { get; set; }
+   
     [Inject]
     NavigationManager NavigationManager { get; set; } = null!;
 
@@ -96,7 +36,6 @@
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         var userAutenticado = authState.User;
-        NombreUsuarioAutenticado = userAutenticado.Identity.Name;
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
     }

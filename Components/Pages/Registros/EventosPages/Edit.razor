@@ -1,4 +1,4 @@
-﻿@page "/Eventos/Create/{ClienteID:int}/{UserID}"
+﻿@page "/Eventos/Edit/{ClienteID:int}/{UserID}/{EventoID:int}"
 
 @rendermode InteractiveServer
 @inject ActividadesService actividadesService
@@ -29,7 +29,7 @@
 
 @attribute [Authorize(Roles = "admin, cliente")]
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Edit</PageTitle>
 <div class="container-lg">
     <div class="row mb-3">
         <div class="col md-5">
@@ -41,11 +41,11 @@
 
     <div class="card shadow-lg">
         <div class="card-header">
-            <h3 class="text-center"><strong>Create</strong></h3>
+            <h3 class="text-center"><strong>Edit</strong></h3>
         </div>
         <div class="card-body">
             <div class="container">
-                <EditForm Model="@Input" OnValidSubmit="Guardar" FormName="CreateEventos">
+                <EditForm Model="@Input" OnValidSubmit="Guardar" FormName="EditEventos">
                     <DataAnnotationsValidator />
 
                     <div class="row mb-3">
@@ -204,12 +204,15 @@
     public Eventos Evento { get; set; } = new();
     public Clientes Cliente { get; set; } = new();
     public List<Actividades> ListaActividades { get; set; } = new();
+    public List<EventosDetalle> DetallesOriginales { get; set; } = new();
     public ApplicationUser User { get; set; }
 
     [Parameter]
     public int ClienteID { get; set; }
     [Parameter]
     public string UserID { get; set; }
+    [Parameter]
+    public int EventoID { get; set; }
 
     void NavegarA() { NavigationManager.NavigateTo($"/Eventos/Index/{ClienteID}/{UserID}"); }
 
@@ -218,6 +221,17 @@
         Cliente = await clientesService.Buscar(ClienteID);
         User = await UserManager.FindByIdAsync(UserID);
         ListaActividades = await actividadesService.Listar(x => x.IdCliente == ClienteID);
+        Evento = await eventosService.Buscar(EventoID);
+        Input.Titulo = Evento.TituloEvento;
+        Input.Direccion = Evento.Direccion;
+        Input.Nota = Evento.Nota;
+        Input.FechaInicio = Evento.FechaInicio;
+        DetallesOriginales = Evento.ListaDetalle
+        .Select(d => new EventosDetalle
+            {
+                ActividadId = d.ActividadId,
+                Precio = d.Precio,
+            }).ToList();
     }
 
     public async Task Guardar()
@@ -225,6 +239,12 @@
         if (Evento.ListaDetalle.Count == 0)
         {
             MensajeError = "El evento debe tener detalle";
+            return;
+        }
+
+        if (Input.ActividadId != 0 || Input.Participantes != 0 || Input.PrecioEntradaEvento != 0)
+        {
+            MensajeError = "Limpie los campos del detalle para continuar";
             return;
         }
 
@@ -241,19 +261,25 @@
             return;
         }
 
-        var idsActividadesEnDetalle = new List<int>();
-        foreach (var detalle in Evento.ListaDetalle)
-            idsActividadesEnDetalle.Add(detalle.ActividadId);
-        var listaDetalles = Evento.ListaDetalle;
-
         Evento.ClienteId = ClienteID;
         Evento.TituloEvento = Input.Titulo;
         Evento.Direccion = Input.Direccion;
         Evento.Nota = Input.Nota;
         Evento.FechaInicio = Input.FechaInicio;
-        Evento.PrecioEntradaEvento = Input.PrecioEntradaEvento;
 
-        await actividadesService.AfectarCupos(idsActividadesEnDetalle.ToArray(), idsActividadesEnDetalle.ToArray(), Evento, true);
+        var idsActividadesEnDetalle = new List<int>();
+        foreach (var detalle in Evento.ListaDetalle)
+        {
+            idsActividadesEnDetalle.Add(detalle.ActividadId);
+        }
+
+        var actividadesEliminadas = DetallesOriginales
+                                                .Where(ori => !Evento.ListaDetalle.Any(actual => actual.ActividadId == ori.ActividadId))
+                                                .Select(detalle => detalle.ActividadId)
+                                                .ToList();
+        // Recuperar cupos para esas actividades
+
+        await actividadesService.AfectarCupos(actividadesEliminadas.ToArray(), idsActividadesEnDetalle.ToArray(), Evento, true);
         await eventosService.Guardar(Evento);
 
         NavigationManager.NavigateTo($"/Eventos/Index/{ClienteID}/{UserID}");
@@ -261,6 +287,7 @@
 
     public void Limpiar()
     {
+        MensajeErrorDetalle = string.Empty;
         Input.ActividadId = 0;
         Input.PrecioEntradaEvento = 0;
         Input.Participantes = 0;
@@ -291,10 +318,11 @@
             return;
         }
 
-        if (Evento.ListaDetalle.Any(x => x.ActividadId == actividad.ActividadId))
+        var detalleExistente = Evento.ListaDetalle.FirstOrDefault(x => x.ActividadId == actividad.ActividadId);
+        if (detalleExistente != null)
         {
-            MensajeErrorDetalle = "Esta actividad ya fue agregada";
-            return;
+            Evento.PrecioEntradaEvento -= detalleExistente.Participantes * detalleExistente.Precio;
+            Evento.ListaDetalle.Remove(detalleExistente);
         }
 
         if (Input.Participantes > actividad.Cupos)
@@ -355,20 +383,3 @@
         public TimeOnly HoraFin { get; set; }
     }
 }
-
-        @* var actividadesExistentes = await actividadesService.BuscarPorClienteId(ClienteID); 
-
-        foreach (var actividadExistente in actividadesExistentes)
-        {
-            var horaInicioExistente = actividadExistente.HoraInicio;
-            var horaFinExistente = actividadExistente.HoraFin;
-            var horaInicioNueva = Input.HoraInicio;
-            var horaFinNueva = Input.HoraFin;
-
-            if ((horaInicioNueva < horaFinExistente && horaFinNueva > horaInicioExistente) ||
-                (horaInicioExistente < horaFinNueva && horaFinExistente > horaInicioNueva))
-            {
-                MensajeError = "La actividad se solapa con una actividad existente.";
-                return;
-            }
-        } *@

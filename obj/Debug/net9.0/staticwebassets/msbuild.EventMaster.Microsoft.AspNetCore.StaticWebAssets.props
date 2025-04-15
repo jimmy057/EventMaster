@@ -606,8 +606,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>coygv5zdye</Fingerprint>
-      <Integrity>jDYuvymBHfpNOIfjVA9qxgn/i4RO07SmWU2pz1SSpUg=</Integrity>
+      <Fingerprint>g8mqxj9yjd</Fingerprint>
+      <Integrity>EPCdRbD3rnVNwiVTsc+aqX1CtUt5UYYtEs20V2IIIOg=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\assets\images\about\welcome-banner.jpg'))</OriginalItemSpec>

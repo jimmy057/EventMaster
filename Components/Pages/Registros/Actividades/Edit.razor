@@ -53,31 +53,25 @@
                     <DataAnnotationsValidator />
 
                     <div class="row mb-3">
-                        <div class="col col-md-8">
+                        <div class="col-md-4">
                             <label><strong>Título</strong></label>
                             <InputText required class="form-control" @bind-Value="Input.Titulo" placeholder="Título" />
                         </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col col-md-8">
+                        <div class="col-md-4">
                             <label><strong>Tipo de Actividad</strong></label>
                             <InputText required class="form-control" @bind-Value="Input.Tipo" placeholder="Tipo de Actividad" />
                         </div>
                     </div>
-
                     <div class="row mb-3">
-                        <div class="col col-md-8">
-                            <label><strong>Participantes</strong></label>
-                            <InputNumber required class="form-control" @bind-Value="Input.Participantes" />
+                        <div class="col-md-4">
+                            <label><strong>Hora Inicio</strong></label>
+                            <input type="time" class="form-control" @bind="Input.HoraInicio" />
                         </div>
-
-                        <div class="col col-md-8">
-                            <label><strong>Participantes</strong></label>
-                            <InputNumber required class="form-control" @bind-Value="Input.Precio" />
+                        <div class="col-md-4">
+                            <label><strong>Hora Fin</strong></label>
+                            <input type="time" required class="form-control" @bind="Input.HoraFin" />
                         </div>
                     </div>
-
                     <div class="row mb-3">
                         <div class="col col-md-8">
                             <label><strong>Descripción</strong></label>
@@ -101,13 +95,13 @@
 
 <style>
     .custom-button {
-    background-color: #bf1ff0;
-    color: white;
+        background-color: #bf1ff0;
+        color: white;
     }
 
-    .custom-button:hover {
-    background-color: #9e1ac7; /* versión más oscura */
-    }
+        .custom-button:hover {
+            background-color: #9e1ac7; /* versión más oscura */
+        }
 </style>
 
 @code {
@@ -138,14 +132,15 @@
         Input.Titulo = Actividad.TituloActividad;
         Input.Tipo = Actividad.TipoActividad;
         Input.Descripcion = Actividad.Descripcion;
-        Input.Participantes = Actividad.Participantes;
-        Input.Precio = Actividad.Precio;
+        Input.HoraInicio = Actividad.HoraInicio;
+        Input.HoraFin = Actividad.HoraFin;
     }
 
     public async Task Guardar()
     {
         MensajeError = string.Empty;
-        if (string.IsNullOrEmpty(Input.Titulo) || string.IsNullOrEmpty(Input.Descripcion) || string.IsNullOrEmpty(Input.Tipo) || Input.Participantes <= 0 || Input.Precio <= 0)
+        if (string.IsNullOrEmpty(Input.Titulo) ||
+            string.IsNullOrEmpty(Input.Tipo))
         {
             MensajeError = "Complete los campos requeridos";
             return;
@@ -163,12 +158,25 @@
             return;
         }
 
+        if (Input.HoraInicio == default ||
+            Input.HoraFin == default)
+        {
+            MensajeError = "Las horas deben ser diferente de las 12:00 a.m.";
+            return;
+        }
+
+        if (Input.HoraInicio >= Input.HoraFin)
+        {
+            MensajeError = "La hora de inicio debe ser menor que la hora de fin";
+            return;
+        }
+
         Actividad.TituloActividad = Input.Titulo;
         Actividad.TipoActividad = Input.Tipo;
         Actividad.Descripcion = Input.Descripcion;
-        Actividad.Participantes = Input.Participantes;
         Actividad.IdCliente = ClienteID;
-        Actividad.Precio = Input.Precio;
+        Actividad.HoraInicio = Input.HoraInicio;
+        Actividad.HoraFin = Input.HoraFin;
 
         await actividadesService.Guardar(Actividad);
         NavigationManager.NavigateTo($"/Actividades/Index/{ClienteID}/{UserID}");
@@ -189,11 +197,11 @@
         public string Descripcion { get; set; } = "";
 
         [Required]
-        [Display(Name = "Participantes")]
-        public int Participantes { get; set; }
+        [Display(Name = "HoraFin")]
+        public TimeOnly HoraFin { get; set; }
 
         [Required]
-        [Display(Name = "Participantes")]
-        public double Precio { get; set; }
+        [Display(Name = "HoraInicio")]
+        public TimeOnly HoraInicio { get; set; }
     }
 }
