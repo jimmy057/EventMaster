@@ -12,8 +12,8 @@ public class Eventos
 	public string TituloEvento { get; set; }
 	public string Direccion { get; set; }
 	public double PrecioEntradaEvento { get; set; }
-	public DateTime FechaInicio { get; set; }
-	public string Nota { get; set; }
+	public DateTime FechaInicio { get; set; } = DateTime.Now;
+	public string? Nota { get; set; } = "";
 	public List<EventosDetalle> ListaDetalle { get; set; } = new();
 	[NotMapped]
 	public string EstadoEvento
