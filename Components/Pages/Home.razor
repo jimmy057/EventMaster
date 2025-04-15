@@ -1,6 +1,9 @@
 ﻿@page "/"
 @inject NavigationManager NavigationManager
 @inject ClientesService clientesService
+@inject UsuariosService usuariosService
+@inject ActividadesService actividadesService
+@inject EventosService eventosService
 @inject AdministradoresService administradoresService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -12,7 +15,7 @@
     <![endif]-->
     <!-- top-area End -->
     <!--welcome-hero start -->
-    <AuthorizeView>
+    <AuthorizeView Roles="admin">
         <Authorized>
             <section id="welcome-hero" class="welcome-hero">
                 <div class="container">
@@ -39,10 +42,59 @@
                                 <button type="button" @onclick="irAdmin" class="btn btn-light mt-3" style="width: 150px;">Ir a Admins</button>
                             </div>
                         </div>
+                        <div class="col-md-3 text-center">
+                            <div class="header-text p-4 rounded" style="background-color: #d92cf9; height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <i class="bi bi-calendar-check fs-1" style="color: white;"></i>
+                                <h3 style="color: white;">Total de Actividades</h3>
+                                <h3 style="color: white;">@ListaActividades.Count</h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 text-center">
+                            <div class="header-text p-4 rounded" style="background-color: #d92cf9; height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <i class="bi bi-calendar-week-fill fs-1" style="color: white;"></i>
+                                <h3 style="color: white;">Total de Eventos</h3>
+                                <h3 style="color: white;">@ListaEventos.Count</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
         </Authorized>
+    </AuthorizeView>
+    <AuthorizeView Roles="cliente">
+        <Authorized>
+            <section id="welcome-hero" class="welcome-hero">
+                <div class="container">
+                    <div class="col-md-12 text-center">
+                        <div class="header-text">
+                            <h2>Dashboard</h2>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-3 text-center">
+                            <div class="header-text p-4 rounded" style="background-color: #d92cf9; height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <i class="bi bi-people-fill fs-1" style="color: white;"></i>
+                                <h3 style="color: white;">Mis Actividades</h3>
+                                <h3 style="color: white;">@ListaActividades.Count</h3>
+                                <button type="button" @onclick="IrActividades" class="btn btn-light mt-3" style="width: 150px;">Ir a Actividades</button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 text-center">
+                            <div class="header-text p-4 rounded" style="background-color: #d92cf9; height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <i class="bi bi-person-fill-gear fs-1" style="color: white;"></i>
+                                <h3 style="color: white;">Mis Eventos</h3>
+                                <h3 style="color: white;">@ListaEventos.Count</h3>
+                                <button type="button" @onclick="IrEventos" class="btn btn-light mt-3" style="width: 150px;">Ir a Eventos</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView>
         <NotAuthorized>
             <section id="welcome-hero" class="welcome-hero">
                 <div class="container">
@@ -202,19 +254,35 @@
 
 @code {
     private bool isAdmin;
-    private void IrAClientes() => NavigationManager.NavigateTo("/Clientes/Index");
-    private void irAdmin() => NavigationManager.NavigateTo("/Administradores/Index");
     private List<Administradores> ListaAdmins { get; set; } = new();
     private List<Clientes> ListaClientes { get; set; } = new();
+    private List<Actividades> ListaActividades { get; set; } = new();
+    private List<Eventos> ListaEventos { get; set; } = new();
+    private Clientes Cliente { get; set; } = new();
+
+    private void IrAClientes() => NavigationManager.NavigateTo("/Clientes/Index");
+    private void irAdmin() => NavigationManager.NavigateTo("/Administradores/Index");
+    private void IrEventos() => NavigationManager.NavigateTo($"/Eventos/Index/{Cliente.ClienteId}/{Cliente.UsuarioId}");
+    private void IrActividades() => NavigationManager.NavigateTo($"/Actividades/Index/{Cliente.ClienteId}/{Cliente.UsuarioId}");
 
     protected override async Task OnInitializedAsync()
     {
         var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authenticationState.User;
+        var userId = user.FindFirst(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+
         if (user.IsInRole("admin"))
         {
             ListaAdmins = await administradoresService.Listar(x => true);
             ListaClientes = await clientesService.Listar(x => true);
+            ListaActividades = await actividadesService.Listar(x => true);
+            ListaEventos = await eventosService.Listar(x => true);
+        }
+        if (user.IsInRole("cliente"))
+        {
+            Cliente = await usuariosService.BuscarClientePorUserId(userId);
+            ListaActividades = await actividadesService.Listar(x => x.IdCliente == Cliente.ClienteId);
+            ListaEventos = await eventosService.Listar(x => x.ClienteId == Cliente.ClienteId);
         }
     }
 }

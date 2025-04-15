@@ -68,6 +68,53 @@ public class ActividadesService(IDbContextFactory<ApplicationDbContext> DbFactor
 			.AsNoTracking()
 			.FirstOrDefaultAsync(c => c.ActividadId == id);
 	}
+
+	public async Task AfectarCupos(int[] idsActividadesEditadas, int[] idsActividadesEnDetalleActual, Eventos evento, bool esEdicion)
+	{
+		await using var contexto = await DbFactory.CreateDbContextAsync();
+
+		if (esEdicion)
+		{
+			var detalleAntesDeEditar = await contexto.EventosDetalle
+				.Where(d => idsActividadesEditadas.Contains(d.ActividadId))
+				.ToListAsync();
+
+			var detalleActual = await contexto.EventosDetalle
+				.Where(d => idsActividadesEnDetalleActual.Contains(d.ActividadId))
+				.ToListAsync();
+
+			var actividadesAnteriores = await contexto.Actividades
+				.Where(a => detalleAntesDeEditar.Select(d => d.ActividadId).Contains(a.ActividadId))
+				.ToListAsync();
+
+			foreach (var detalle in detalleAntesDeEditar)
+			{
+				var actividad = contexto.Actividades.FirstOrDefault(a => a.ActividadId == detalle.ActividadId);
+				if (actividad != null)
+				{
+					actividad.Cupos += detalle.Participantes; // Recuperar cupos
+				}
+			}
+			contexto.EventosDetalle.RemoveRange(detalleAntesDeEditar);
+		}
+		else
+		{
+			var listaActividades = await contexto.Actividades
+				.Where(x => idsActividadesEditadas.Contains(x.ActividadId))
+				.ToListAsync();
+
+			foreach (var detalle in evento.ListaDetalle)
+			{
+				var actividad = listaActividades.FirstOrDefault(x => x.ActividadId == detalle.ActividadId);
+				if (actividad != null && detalle.Participantes > 0)
+				{
+					actividad.Cupos -= detalle.Participantes;
+				}
+			}
+
+		}
+			await contexto.SaveChangesAsync();
+	}
 }
 
 

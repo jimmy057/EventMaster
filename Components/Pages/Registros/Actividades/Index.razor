@@ -149,6 +149,16 @@
         userAutenticado = authState.User;
         Cliente = await clientesService.Buscar(ClienteID);
         User = await UserManager.FindByIdAsync(UserID);
+        if (userAutenticado.IsInRole("cliente"))
+        {
+            var idActual = (await UserManager.GetUserAsync(userAutenticado))?.Id;
+
+            if (idActual != UserID)
+            {
+                NavigationManager.NavigateTo("/AccessDenied", forceLoad: true);
+                return;
+            }
+        }
         ListaActividades = await actividadesService.Listar(x => x.IdCliente == ClienteID);
     }
 

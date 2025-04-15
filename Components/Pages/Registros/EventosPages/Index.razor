@@ -107,12 +107,12 @@
                                 <td>@evento.TituloEvento</td>
                                 <AuthorizeView>
                                     <Authorized>
-                                        <td>@Cliente.Nombre + @Cliente.Apellido</td>
+                                        <td>@Cliente.Nombre @Cliente.Apellido</td>
                                     </Authorized>
                                 </AuthorizeView>
                                 <td>@evento.Direccion</td>
                                 @* <td>@evento.Cupos</td> *@
-                                <td>@evento.FechaInicio</td>
+                                <td>@evento.FechaInicio.ToString("dd/MM/yyyy")</td>
                                 <td>@evento.EstadoEvento</td>
                                 <td>
                                     <div class="dropdown">
@@ -166,6 +166,16 @@
         userAutenticado = authState.User;
         Cliente = await clientesService.Buscar(ClienteID);
         User = await UserManager.FindByIdAsync(UserID);
+        if (userAutenticado.IsInRole("cliente"))
+        {
+            var idActual = (await UserManager.GetUserAsync(userAutenticado))?.Id;
+
+            if (idActual != UserID)
+            {
+                NavigationManager.NavigateTo("/AccessDenied", forceLoad: true);
+                return;
+            }
+        }
         ListaEventos = await eventosService.Listar(x => true);
     }
 

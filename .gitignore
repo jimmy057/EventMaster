@@ -7,3 +7,4 @@
 /.gitignore
 /obj/Debug/net9.0/EventMaster.AssemblyInfo.cs
 /obj/Debug/net9.0/EventMaster.AssemblyInfoInputs.cache
+/obj/Debug/net9.0/EventMaster.GeneratedMSBuildEditorConfig.editorconfig
