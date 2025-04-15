@@ -3,3 +3,7 @@
 ################################################################################
 
 /bin/Debug/net9.0
+/obj/Debug/net9.0/EventMaster.AssemblyInfo.cs
+/.gitignore
+/obj/Debug/net9.0/EventMaster.AssemblyInfo.cs
+/obj/Debug/net9.0/EventMaster.AssemblyInfoInputs.cache
