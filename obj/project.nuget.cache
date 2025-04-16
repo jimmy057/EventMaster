@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "VVukTQmEn7k=",
+  "dgSpecHash": "FVhqx/YNmjM=",
   "success": true,
-  "projectFilePath": "C:\\Users\\IngYT\\source\\repos\\EventMaster\\EventMaster\\EventMaster.csproj",
+  "projectFilePath": "C:\\Users\\IngYT\\source\\repos\\EventMaster\\eventmaster\\EventMaster.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\IngYT\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\IngYT\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
