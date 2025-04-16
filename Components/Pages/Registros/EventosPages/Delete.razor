@@ -175,7 +175,7 @@
     public Eventos Evento { get; set; } = new();
     public Clientes Cliente { get; set; } = new();
     public List<Actividades> ListaActividades { get; set; } = new();
-    public List<EventosDetalle> DetallesOriginales { get; set; } = new();
+    public List<EventosDetalle> DetalleAntesDeEditar { get; set; } = new();
     public ApplicationUser User { get; set; }
 
     [Parameter]
@@ -197,7 +197,7 @@
         Input.Direccion = Evento.Direccion;
         Input.Nota = Evento.Nota;
         Input.FechaInicio = Evento.FechaInicio;
-        DetallesOriginales = Evento.ListaDetalle
+        DetalleAntesDeEditar = Evento.ListaDetalle
         .Select(d => new EventosDetalle
             {
                 ActividadId = d.ActividadId,
@@ -209,6 +209,15 @@
     {
         try
         {
+            List<Actividades> actividadesActualesEnDetalle = new();
+            foreach (var detalle in Evento.ListaDetalle)
+            {
+                var actividades = await actividadesService.Listar(a => a.ActividadId == detalle.ActividadId);
+                if (actividades != null)
+                    actividadesActualesEnDetalle.AddRange(actividades);
+            }
+            
+            await actividadesService.RecuperarCuposAlEliminar(Evento, actividadesActualesEnDetalle);
             await eventosService.Eliminar(EventoID);
             NavegarA();
         }
