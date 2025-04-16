@@ -69,51 +69,107 @@ public class ActividadesService(IDbContextFactory<ApplicationDbContext> DbFactor
 			.FirstOrDefaultAsync(c => c.ActividadId == id);
 	}
 
-	public async Task AfectarCupos(int[] idsActividadesEditadas, int[] idsActividadesEnDetalleActual, Eventos evento, bool esEdicion)
+	public async Task AfectarCupos(List<Actividades> actividadesActualesEnDetalle,
+								   Eventos evento,
+								   bool esEdicion,
+								   List<Actividades>? actividadesAntesDeEditar = null,
+								   List<Actividades>? actividadesEliminadas = null,
+								   List<Actividades>? actividadesNuevas = null)
 	{
 		await using var contexto = await DbFactory.CreateDbContextAsync();
 
 		if (esEdicion)
 		{
-			var detalleAntesDeEditar = await contexto.EventosDetalle
-				.Where(d => idsActividadesEditadas.Contains(d.ActividadId))
+			var actividadIds = actividadesActualesEnDetalle.Select(a => a.ActividadId).ToList();
+			var listaDetalleActual = await contexto.EventosDetalle
+				.Where(a => actividadIds.Contains(a.ActividadId))
 				.ToListAsync();
 
-			var detalleActual = await contexto.EventosDetalle
-				.Where(d => idsActividadesEnDetalleActual.Contains(d.ActividadId))
+			var ids = actividadesAntesDeEditar.Select(a => a.ActividadId).ToList();
+			var listaDetalleAntesDeEditar = await contexto.EventosDetalle
+				.Where(a => ids.Contains(a.ActividadId))
 				.ToListAsync();
 
-			var actividadesAnteriores = await contexto.Actividades
-				.Where(a => detalleAntesDeEditar.Select(d => d.ActividadId).Contains(a.ActividadId))
-				.ToListAsync();
-
-			foreach (var detalle in detalleAntesDeEditar)
+			if (evento.ListaDetalle != null && actividadesNuevas != null && actividadesNuevas.Count > 0)
 			{
-				var actividad = contexto.Actividades.FirstOrDefault(a => a.ActividadId == detalle.ActividadId);
-				if (actividad != null)
+				foreach (var actividad in actividadesNuevas)
 				{
-					actividad.Cupos += detalle.Participantes; // Recuperar cupos
+					var detalle = evento.ListaDetalle.FirstOrDefault(d => d.ActividadId == actividad.ActividadId);
+					if (detalle != null && actividad.ActividadId == detalle.ActividadId)
+					{
+						detalle.Evento = null;
+						contexto.Attach(actividad);
+						actividad.Cupos -= detalle.Participantes;
+
+						// revisar si ya existe en la BD
+						var detalleExistente = await contexto.EventosDetalle
+							.FirstOrDefaultAsync(d => d.EventoId == evento.EventoId && d.ActividadId == detalle.ActividadId);
+
+						if (detalleExistente != null)
+						{
+							// Ya existe: actualiza campos
+							detalleExistente.Participantes += detalle.Participantes;
+							detalleExistente.Precio += detalle.Precio;
+							// etc., si hay más campos
+						}
+						else
+						{
+							// No existe, lo insertamos
+							contexto.EventosDetalle.Add(detalle);
+						}
+					}
+
 				}
 			}
-			contexto.EventosDetalle.RemoveRange(detalleAntesDeEditar);
+
+			var listaDetalleEliminado = new List<EventosDetalle>();
+			if (actividadesEliminadas != null && actividadesEliminadas.Count > 0)
+			{
+				listaDetalleEliminado = await contexto.EventosDetalle
+				   .Where(d => actividadesEliminadas.Select(a => a.ActividadId).Contains(d.ActividadId))
+				   .ToListAsync();
+
+				foreach (var detalle in listaDetalleAntesDeEditar)
+				{
+					var detalleAux = listaDetalleEliminado.FirstOrDefault(d => d.ActividadId == detalle.ActividadId);
+					var actividadAux = actividadesEliminadas.FirstOrDefault(a => a.ActividadId == detalle.ActividadId);
+					if (actividadAux == null || detalleAux == null || actividadAux.ActividadId != detalleAux.ActividadId)
+						continue;
+					contexto.Attach(actividadAux);
+					actividadAux.Cupos += detalleAux.Participantes;
+					contexto.EventosDetalle.Remove(detalleAux);
+				}
+			}
+
 		}
 		else
 		{
-			var listaActividades = await contexto.Actividades
-				.Where(x => idsActividadesEditadas.Contains(x.ActividadId))
-				.ToListAsync();
-
 			foreach (var detalle in evento.ListaDetalle)
 			{
-				var actividad = listaActividades.FirstOrDefault(x => x.ActividadId == detalle.ActividadId);
+				var actividad = actividadesActualesEnDetalle.FirstOrDefault(x => x.ActividadId == detalle.ActividadId);
 				if (actividad != null && detalle.Participantes > 0)
 				{
+					contexto.Attach(actividad);
 					actividad.Cupos -= detalle.Participantes;
 				}
 			}
-
 		}
-			await contexto.SaveChangesAsync();
+		await contexto.SaveChangesAsync();
+	}
+	public async Task RecuperarCuposAlEliminar(Eventos evento, List<Actividades> actividadesActualesEnDetalle)
+	{
+		await using var contexto = await DbFactory.CreateDbContextAsync();
+
+		foreach (var detalle in evento.ListaDetalle)
+		{
+			var actividad = actividadesActualesEnDetalle.FirstOrDefault(x => x.ActividadId == detalle.ActividadId);
+			if (actividad != null && detalle.Participantes > 0)
+			{
+				contexto.Attach(actividad);
+				actividad.Cupos += detalle.Participantes;
+			}
+		}
+		await contexto.SaveChangesAsync();
 	}
 }
 
