@@ -235,18 +235,11 @@
             return;
         }
 
-        if (Input.FechaInicio == default)
+        if (Input.FechaInicio <= DateTime.Now)
         {
             MensajeError = "Por favor, indique una fecha valida";
             return;
         }
-
-        var idsActividadesEnDetalle = new List<int>();
-        foreach (var detalle in Evento.ListaDetalle)
-        {
-            idsActividadesEnDetalle.Add(detalle.ActividadId);
-        }
-        var listaDetalles = Evento.ListaDetalle;
 
         Evento.ClienteId = ClienteID;
         Evento.TituloEvento = Input.Titulo;
@@ -255,7 +248,14 @@
         Evento.FechaInicio = Input.FechaInicio;
         Evento.PrecioEntradaEvento = Evento.PrecioEntradaEvento;
 
-        await actividadesService.AfectarCupos(idsActividadesEnDetalle.ToArray(), idsActividadesEnDetalle.ToArray(), Evento, true);
+        var idsActividadesEnDetalle = new List<int>();
+        foreach (var detalle in Evento.ListaDetalle)
+        {
+            idsActividadesEnDetalle.Add(detalle.ActividadId);
+        }
+        var actividadesActualesEnDetalle = await actividadesService.Listar(a => idsActividadesEnDetalle.Contains(a.ActividadId));
+
+        await actividadesService.AfectarCupos(actividadesActualesEnDetalle, Evento, false);
         await eventosService.Guardar(Evento);
 
         NavigationManager.NavigateTo($"/Eventos/Index/{ClienteID}/{UserID}");
@@ -344,7 +344,7 @@
         public double PrecioEntradaEvento { get; set; }
 
         [Required]
-        public DateTime FechaInicio { get; set; }
+        public DateTime FechaInicio { get; set; } = DateTime.Now;
 
         public int Participantes { get; set; }
 
@@ -357,20 +357,3 @@
         public TimeOnly HoraFin { get; set; }
     }
 }
-
-        @* var actividadesExistentes = await actividadesService.BuscarPorClienteId(ClienteID); 
-
-        foreach (var actividadExistente in actividadesExistentes)
-        {
-            var horaInicioExistente = actividadExistente.HoraInicio;
-            var horaFinExistente = actividadExistente.HoraFin;
-            var horaInicioNueva = Input.HoraInicio;
-            var horaFinNueva = Input.HoraFin;
-
-            if ((horaInicioNueva < horaFinExistente && horaFinNueva > horaInicioExistente) ||
-                (horaInicioExistente < horaFinNueva && horaFinExistente > horaInicioNueva))
-            {
-                MensajeError = "La actividad se solapa con una actividad existente.";
-                return;
-            }
-        } *@

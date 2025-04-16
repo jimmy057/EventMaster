@@ -184,13 +184,13 @@
 
 <style>
     .custom-button {
-        background-color: #bf1ff0;
-        color: white;
+    background-color: #bf1ff0;
+    color: white;
     }
 
-        .custom-button:hover {
-            background-color: #9e1ac7; /* versión más oscura */
-        }
+    .custom-button:hover {
+    background-color: #9e1ac7; /* versión más oscura */
+    }
 </style>
 
 @code {
@@ -204,8 +204,9 @@
     public Eventos Evento { get; set; } = new();
     public Clientes Cliente { get; set; } = new();
     public List<Actividades> ListaActividades { get; set; } = new();
-    public List<EventosDetalle> DetallesOriginales { get; set; } = new();
+    public List<EventosDetalle> DetalleAntesDeEditar { get; set; } = new();
     public ApplicationUser User { get; set; }
+    public int? TotalParticipantes { get; set; } = 0;
 
     [Parameter]
     public int ClienteID { get; set; }
@@ -226,11 +227,18 @@
         Input.Direccion = Evento.Direccion;
         Input.Nota = Evento.Nota;
         Input.FechaInicio = Evento.FechaInicio;
-        DetallesOriginales = Evento.ListaDetalle
+
+        DetalleAntesDeEditar = Evento.ListaDetalle
         .Select(d => new EventosDetalle
             {
                 ActividadId = d.ActividadId,
                 Precio = d.Precio,
+                DetalleId = d.DetalleId,
+                EventoId = d.EventoId,
+                Participantes = d.Participantes,
+                HoraFin = d.HoraFin,
+                HoraInicio = d.HoraInicio,
+                TipoActividad = d.TipoActividad
             }).ToList();
     }
 
@@ -267,21 +275,34 @@
         Evento.Nota = Input.Nota;
         Evento.FechaInicio = Input.FechaInicio;
 
-
-        var idsActividadesEnDetalle = new List<int>();
+        List<Actividades> actividadesActualesEnDetalle = new();
         foreach (var detalle in Evento.ListaDetalle)
         {
-            idsActividadesEnDetalle.Add(detalle.ActividadId);
-            Evento.PrecioEntradaEvento += detalle.Precio;
+            var actividades = await actividadesService.Listar(a => a.ActividadId == detalle.ActividadId);
+            if (actividades != null)
+                actividadesActualesEnDetalle.AddRange(actividades);
         }
 
-        var actividadesEliminadas = DetallesOriginales
-                                                .Where(ori => !Evento.ListaDetalle.Any(actual => actual.ActividadId == ori.ActividadId))
-                                                .Select(detalle => detalle.ActividadId)
-                                                .ToList();
-        // Recuperar cupos para esas actividades
+        var idsActividadesEliminadas = DetalleAntesDeEditar
+            .Where(est => !Evento.ListaDetalle.Any(actual => actual.ActividadId == est.ActividadId))
+            .Select(detalle => detalle.ActividadId)
+            .ToList();
+        var actividadesEliminadas = await actividadesService.Listar(a => idsActividadesEliminadas.Contains(a.ActividadId));
 
-        await actividadesService.AfectarCupos(actividadesEliminadas.ToArray(), idsActividadesEnDetalle.ToArray(), Evento, true);
+        var idsActividadesNuevas = Evento.ListaDetalle
+            .Where(actual => !DetalleAntesDeEditar.Any(est => est.ActividadId == actual.ActividadId))
+            .Select(detalle => detalle.ActividadId)
+            .ToList();
+        var actividadesNuevas = await actividadesService.Listar(a => idsActividadesNuevas.Contains(a.ActividadId));
+
+        var idsActividadesAntesDeEditar = DetalleAntesDeEditar
+            .Select(detalle => detalle.ActividadId)
+            .Distinct()
+            .ToList();
+        var actividadesAntesDeEditar = await actividadesService.Listar(a => idsActividadesAntesDeEditar.Contains(a.ActividadId));
+
+        // Recuperar cupos para esas actividades
+        await actividadesService.AfectarCupos(actividadesActualesEnDetalle, Evento, true, actividadesAntesDeEditar, actividadesEliminadas, actividadesNuevas);
         await eventosService.Guardar(Evento);
 
         NavigationManager.NavigateTo($"/Eventos/Index/{ClienteID}/{UserID}");
@@ -319,14 +340,17 @@
             MensajeErrorDetalle = "Actividad no encontrada";
             return;
         }
-
         var detalleExistente = Evento.ListaDetalle.FirstOrDefault(x => x.ActividadId == actividad.ActividadId);
         if (detalleExistente != null)
         {
             Evento.PrecioEntradaEvento -= detalleExistente.Participantes * detalleExistente.Precio;
             Evento.ListaDetalle.Remove(detalleExistente);
         }
-
+        if (TotalParticipantes > actividad.Cupos)
+        {
+            MensajeErrorDetalle = "No hay suficientes cupos para esta actividad";
+            return;
+        }
         if (Input.Participantes > actividad.Cupos)
         {
             MensajeErrorDetalle = "No hay suficientes cupos para esta actividad";
