@@ -118,7 +118,7 @@ namespace EventMaster.Migrations
 
                     b.HasKey("ActividadId");
 
-                    b.ToTable("Actividades");
+                    b.ToTable("Actividades", (string)null);
                 });
 
             modelBuilder.Entity("EventMaster.Models.Administradores", b =>
@@ -144,7 +144,7 @@ namespace EventMaster.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Administradores");
+                    b.ToTable("Administradores", (string)null);
                 });
 
             modelBuilder.Entity("EventMaster.Models.Clientes", b =>
@@ -171,7 +171,7 @@ namespace EventMaster.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Clientes");
+                    b.ToTable("Clientes", (string)null);
                 });
 
             modelBuilder.Entity("EventMaster.Models.Eventos", b =>
@@ -206,7 +206,7 @@ namespace EventMaster.Migrations
 
                     b.HasIndex("ClienteId");
 
-                    b.ToTable("Eventos");
+                    b.ToTable("Eventos", (string)null);
                 });
 
             modelBuilder.Entity("EventMaster.Models.EventosDetalle", b =>
@@ -245,7 +245,7 @@ namespace EventMaster.Migrations
 
                     b.HasIndex("EventoId");
 
-                    b.ToTable("EventosDetalle");
+                    b.ToTable("EventosDetalle", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

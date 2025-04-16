@@ -7,7 +7,7 @@ public class EventosDetalle
 	[Key]
 	public int DetalleId { get; set; }
 	public int EventoId { get; set; }
-	public Eventos Evento { get; set; } = new();
+	public Eventos? Evento { get; set; } = new();
 	public int ActividadId { get; set; }
 	public Actividades? Actividad { get; set; }
 	public int Participantes { get; set; }
