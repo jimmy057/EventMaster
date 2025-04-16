@@ -99,30 +99,28 @@
                 <tbody>
                     @foreach (var evento in ListaEventos)
                     {
-                        if (evento.ClienteId == ClienteID || userAutenticado.IsInRole("admin"))
-                        {
-                            <tr>
-                                <td>@evento.EventoId</td>
-                                <td>@evento.TituloEvento</td>
-                                <AuthorizeView Roles="admin">
-                                    <Authorized>
-                                        <td>@Cliente.Nombre</td>
-                                    </Authorized>
-                                </AuthorizeView>
-                                <td>@evento.Direccion</td>
-                                <td>@evento.FechaInicio.ToString("dd/MM/yyyy")</td>
-                                <td>@evento.EstadoEvento</td>
-                                <td>
-                                    <div class="dropdown">
-                                        <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Acción</a>
-                                        <div class="dropdown-menu">
-                                            <a href="/Eventos/Edit/@ClienteID/@UserID/@evento.EventoId" class="dropdown-item">Editar</a>
-                                            <a href="/Eventos/Delete/@ClienteID/@UserID/@evento.EventoId" class="dropdown-item">Eliminar</a>
-                                        </div>
+
+                        <tr>
+                            <td>@evento.EventoId</td>
+                            <td>@evento.TituloEvento</td>
+                            <AuthorizeView Roles="admin">
+                                <Authorized>
+                                    <td>@Cliente.Nombre</td>
+                                </Authorized>
+                            </AuthorizeView>
+                            <td>@evento.Direccion</td>
+                            <td>@evento.FechaInicio.ToString("dd/MM/yyyy")</td>
+                            <td>@evento.EstadoEvento</td>
+                            <td>
+                                <div class="dropdown">
+                                    <a style="cursor: pointer;" class="dropdown-toggle" data-toggle="dropdown">Acción</a>
+                                    <div class="dropdown-menu">
+                                        <a href="/Eventos/Edit/@ClienteID/@UserID/@evento.EventoId" class="dropdown-item">Editar</a>
+                                        <a href="/Eventos/Delete/@ClienteID/@UserID/@evento.EventoId" class="dropdown-item">Eliminar</a>
                                     </div>
-                                </td>
-                            </tr>
-                        }
+                                </div>
+                            </td>
+                        </tr>
                     }
                 </tbody>
                 <caption>Cant de Eventos: @CantEventos</caption>
@@ -133,13 +131,13 @@
 
 <style>
     .custom-button {
-    background-color: #bf1ff0;
-    color: white;
+        background-color: #bf1ff0;
+        color: white;
     }
 
-    .custom-button:hover {
-    background-color: #9e1ac7; /* versión más oscura */
-    }
+        .custom-button:hover {
+            background-color: #9e1ac7; /* versión más oscura */
+        }
 </style>
 
 @code {
@@ -173,7 +171,7 @@
                 return;
             }
         }
-        ListaEventos = await eventosService.Listar(x => true);
+        ListaEventos = await eventosService.Listar(x => x.ClienteId == ClienteID || userAutenticado.IsInRole("cliente"));
     }
 
     void NavegarA() { NavigationManager.NavigateTo($"/Eventos/Create/{ClienteID}/{UserID}"); }
