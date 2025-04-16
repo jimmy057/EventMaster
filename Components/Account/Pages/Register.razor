@@ -28,9 +28,21 @@
                 <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
                     <DataAnnotationsValidator />
                     <hr />
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="Input.Nombre" class="form-label">Nombre</label>
+                            <InputText @bind-Value="Input.Nombre" id="Input.Nombre" class="form-control" autocomplete="name" aria-required="true" placeholder="Nombre" />
+                            <ValidationMessage For="() => Input.Nombre" class="text-danger" />
+                        </div>
+                        <div class="col">
+                            <label for="Input.Apellido" class="form-label">Apellido</label>
+                            <InputText @bind-Value="Input.Apellido" id="Input.Email" class="form-control" autocomplete="lastname" aria-required="true" placeholder="Apellido" />
+                            <ValidationMessage For="() => Input.Apellido" class="text-danger" />
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <label for="Input.Email" class="form-label">Email</label>
-                        <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="email" aria-required="true" placeholder="name@example.com" />
                         <ValidationMessage For="() => Input.Email" class="text-danger" />
                     </div>
                     <div class="mb-3">
@@ -75,7 +87,8 @@
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
         user.PasswordHash = Input.Password;
         user.NormalizedEmail = Input.Email.ToUpper();
-        user.NormalizedUserName = Input.Email.ToUpper();
+        user.UserName = Input.Nombre;
+        user.NormalizedUserName = Input.Nombre.ToUpper();
         user.EmailConfirmed = true;
         var result = await UserStore.CreateAsync(user, CancellationToken.None);
 
@@ -112,8 +125,8 @@
         // }
 
         Clientes cliente = new();
-        cliente.Nombre = user.Email;
-        cliente.Apellido = "";
+        cliente.Nombre = Input.Nombre;
+        cliente.Apellido = Input.Apellido;
         cliente.UsuarioId = user.Id;
         await clientesService.Guardar(cliente);
         await SignInManager.SignInAsync(user, isPersistent: false);
@@ -144,6 +157,14 @@
 
     private sealed class InputModel
     {
+        [Required(ErrorMessage = "Este campo es obligatorio")]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; } = "";
+
+        [Required(ErrorMessage = "Este campo es obligatorio")]
+        [Display(Name = "Apellido")]
+        public string Apellido { get; set; } = "";
+
         [Required(ErrorMessage = "Este campo es obligatorio")]
         [EmailAddress]
         [Display(Name = "Email")]
